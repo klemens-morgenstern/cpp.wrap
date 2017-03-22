@@ -1,0 +1,19 @@
+project wrap :
+	source-location src	
+	: requirements
+	<include>./include
+	<toolset>gcc:<cxxflags>-std=gnu++1y
+	<toolset>gcc:<cxxflags>-ftemplate-depth=512
+	<include>../data/include
+	<toolset>gcc:<asmflags>-mbig-obj
+	<use>/boost//headers
+	;
+	
+exe mw-wrap : wrapper_main.cpp 
+	mw/wrap/outline/gcc.cpp 
+	mw/wrap/generate_wrappers.cpp
+	mw/wrap/generator.cpp
+    /boost//system
+    /boost//program_options
+    /boost//filesystem
+    ..//format ;
