@@ -44,13 +44,19 @@ MW_WRAP_FN_FIX((my, scope_dingens), fn_fix_test, int, (int i))
     return i + 42;
 }
 
-/*
-MW_WRAP_MEM_FIX(std::vector<int>, push_back, void, (const int & i))
+int push_res = 0;
+MW_WRAP_MEM_FIX(std::vector<int>, push_back, void, (int && i))
 {
-
+    push_res = i;
 }
 
-MW_WRAP_STATIC_MEM_FIX(test_t, foo, int, (int value))
+MW_WRAP_MEM_FIX(const std::vector<int>, size, std::size_t, () )
+{
+    return push_res;
+}
+
+
+/*MW_WRAP_STATIC_MEM_FIX(test_t, foo, int, (int value))
 {
 
 }

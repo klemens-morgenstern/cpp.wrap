@@ -17,6 +17,11 @@
 
 #include <vector>
 
+namespace std
+{
+extern template class vector<int>;
+}
+
 int no_scope(int value);
 std::vector<int> fn_fix_test(const std::vector<int> & vec);
 
@@ -37,6 +42,11 @@ BOOST_AUTO_TEST_CASE(unstubbed)
     BOOST_CHECK_EQUAL_COLLECTIONS(
                 res.begin(), res.end(),
                 vec.rbegin(), vec.rend());
+
+    std::vector<int> v2;
+    BOOST_CHECK_EQUAL(v2.size(), 0u);
+    v2.push_back(42);
+    BOOST_CHECK_EQUAL(v2.size(), 1u);
 }
 
 BOOST_AUTO_TEST_CASE(stubbed)
@@ -51,4 +61,8 @@ BOOST_AUTO_TEST_CASE(stubbed)
                 res.begin(), res.end(),
                 vec.begin(), vec.end());
 
+    std::vector<int> v2;
+    BOOST_CHECK_EQUAL(v2.size(), 0u);
+    v2.push_back(42);
+    BOOST_CHECK_EQUAL(v2.size(), 42u);
 }

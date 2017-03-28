@@ -91,14 +91,16 @@ auto raw_assign = [](auto & ctx)
         };
 
 x3::rule<class type_name, std::string> type_name;
-auto type_name_def = *x3::space >> x3::raw[x3::char_("A-Za-z") >> *(parens | pointy_par | (x3::char_ - x3::char_(",)")))][raw_assign] ;
+auto type_name_def = *x3::space >> x3::raw[x3::char_("A-Za-z") >> *(parens | pointy_par | (x3::char_ - x3::char_(",()")))][raw_assign] ;
 BOOST_SPIRIT_DEFINE(type_name);
 
 
+x3::rule<class class_name, std::string> class_name;
+auto class_name_def = *x3::space >> x3::raw[x3::char_("A-Za-z") >> *(parens | pointy_par | x3::char_(":_A-Za-z0-9"))][raw_assign] ;
+BOOST_SPIRIT_DEFINE(class_name);
+
 std::string generator::make_fn_fix(const outline::entry & e)
 {
-
-
     auto assign = [](auto & ref){return [&ref](auto & ctx){ref = x3::_attr(ctx);};};
     auto push_back = [](auto & ref){return [&ref](auto & ctx){ref.push_back(x3::_attr(ctx));};};
 
@@ -124,7 +126,7 @@ std::string generator::make_fn_fix(const outline::entry & e)
     std::string name = std::move(scp_val.back());
     scp_val.pop_back();
 
-    //buidl the function to stub needed function
+    //build the function to stub needed function
 
     std::string needed;
     for (auto & sc : scp_val)
@@ -185,6 +187,116 @@ extern "C" {Return} __wrap__{Target} ({ArgIn});
             );
 
 }
+
+
+std::string generator::make_mem_fix(const outline::entry & e)
+{
+    auto assign    = [](auto & ref){return [&ref](auto & ctx){ref = x3::_attr(ctx);};};
+    auto push_back = [](auto & ref){return [&ref](auto & ctx){ref.push_back(x3::_attr(ctx));};};
+    auto set       = [](auto & ref){return [&ref](auto & ctx){ref = true;};};
+
+    bool volatile_ = false;
+    bool const_ = false;
+    std::string mem_name;
+    std::string class_name_;
+
+    std::vector<std::string> params;
+    std::string return_type;
+    auto rule =
+            "_mw_wrap_mem_fix_" >> (*x3::char_("_A-Za-z0-9"))[assign(mem_name)]
+             >> '(' >>
+             class_name[assign(class_name_)]  >> -x3::lit(" const")[set(const_)] >> -x3::lit(" volatile")[set(volatile_)] >> "*,"  >>
+                *(type_name >> ',')[push_back(params)] >> *x3::space >>  tag_type[assign(return_type)] >> ')' >> *x3::space >> x3::eoi;
+
+    auto itr = e.demangled.begin();
+    auto p = x3::parse(itr, e.demangled.end(), rule);
+
+    if (!p)
+        throw std::runtime_error("ill-formed name " + e.demangled);
+
+    //build the function to stub needed function
+
+    std::string needed;
+    needed += class_name_;
+    needed += "::";
+    needed += mem_name;
+    needed += '(';
+    for (auto & p : params)
+    {
+        if (needed.back() != '(')
+            needed += ", ";
+        needed += p;
+    }
+    needed += ')';
+    if (const_)
+        needed += " const";
+    if (volatile_)
+        needed += " volatile";
+
+    auto it = std::find_if(st.begin(), st.end(),
+               [&needed](const outline::entry & e){return boost::starts_with(e.demangled, needed);});
+
+    if (it == st.end())
+        throw std::runtime_error("Could not find required function: '" + needed + "'");
+
+    auto fm_fwd = R"__(static_cast<{0}>(arg{1}), )__";
+
+
+    auto fm = R"__(
+
+struct {Stub}_t
+{{
+    {Return} impl({ArgIn}) __asm__("__wrap__{Target}");
+}};
+extern "C" {Return} _{Stub}({Class}, {ArgIn}{ArgComma} void*);
+
+{Return} {Stub}_t::impl ({ArgIn})
+{{
+    return static_cast<{Return}>(_{Stub}(reinterpret_cast<{Class}>(this), {ArgFwd} nullptr));
+}}
+
+)__";
+
+    std::string arg_in;
+    std::string arg_fwd;
+    std::string arg_comma;
+
+    if (!params.empty())
+        arg_comma = ", ";
+
+    int i = 0;
+    for (auto arg : params)
+    {
+        if (!arg_in.empty())
+            arg_in += ", ";
+
+        arg_in  += arg + " arg" + std::to_string(i);
+        arg_fwd += fmt::format(fm_fwd, arg, i);
+        i++;
+    }
+
+    std::string cal_fm = class_name_;
+    if (const_)
+        cal_fm += " const";
+    if (volatile_)
+        cal_fm += " volatile";
+
+    cal_fm += " *";
+
+    add_wrap(it->mangled);
+
+    return fmt::format(fm,
+            fmt::arg("Return", return_type),
+            fmt::arg("Stub",   e.mangled),
+            fmt::arg("Target", it->mangled),
+            fmt::arg("Class",  cal_fm),
+            fmt::arg("ArgIn",  arg_in),
+            fmt::arg("ArgFwd", arg_fwd),
+            fmt::arg("ArgComma", arg_comma)
+            );
+
+}
+
 
 } /* namespace wrap */
 } /* namespace mw */
