@@ -27,6 +27,7 @@ namespace wrap {
 
 std::string generator::make()
 {
+    include_std_except = false;
     mw::wrap::outline::storage st_me;
     st_me.resize(st.size());
 
@@ -60,6 +61,9 @@ std::string generator::make()
                 value += make_static_mem(s);
         }
     }
+    if (include_std_except)
+        value.insert(0, "#include <stdexcept>\n");
+
     return value;
 }
 
@@ -294,7 +298,108 @@ extern "C" {Return} _{Stub}({Class}, {ArgIn}{ArgComma} void*);
             fmt::arg("ArgFwd", arg_fwd),
             fmt::arg("ArgComma", arg_comma)
             );
+}
 
+std::string generator::make_static_mem_fix(const outline::entry & e)
+{
+    auto assign    = [](auto & ref){return [&ref](auto & ctx){ref = x3::_attr(ctx);};};
+     auto push_back = [](auto & ref){return [&ref](auto & ctx){ref.push_back(x3::_attr(ctx));};};
+     auto set       = [](auto & ref){return [&ref](auto & ctx){ref = true;};};
+
+     bool volatile_ = false;
+     bool const_ = false;
+     std::string mem_name;
+     std::string class_name_;
+
+     std::vector<std::string> params;
+     std::string return_type;
+     auto rule =
+             "_mw_wrap_static_mem_fix_" >> (*x3::char_("_A-Za-z0-9"))[assign(mem_name)]
+              >> '(' >>
+              class_name[assign(class_name_)]  >> -x3::lit(" const") >> -x3::lit(" volatile") >> "*,"  >>
+                 *(type_name >> ',')[push_back(params)] >> *x3::space >>  tag_type[assign(return_type)] >> ')' >> *x3::space >> x3::eoi;
+
+     auto itr = e.demangled.begin();
+     auto p = x3::parse(itr, e.demangled.end(), rule);
+
+     if (!p)
+         throw std::runtime_error("ill-formed name " + e.demangled);
+
+     //build the function to stub needed function
+
+     std::string needed;
+     needed += class_name_;
+     needed += "::";
+     needed += mem_name;
+     needed += '(';
+     for (auto & p : params)
+     {
+         if (needed.back() != '(')
+             needed += ", ";
+         needed += p;
+     }
+     needed += ')';
+     if (const_)
+         needed += " const";
+     if (volatile_)
+         needed += " volatile";
+
+     auto it = std::find_if(st.begin(), st.end(),
+                [&needed](const outline::entry & e){return boost::starts_with(e.demangled, needed);});
+
+     if (it == st.end())
+         throw std::runtime_error("Could not find required function: '" + needed + "'");
+
+     auto fm_fwd = R"__(static_cast<{0}>(arg{1}), )__";
+
+
+     auto fm = R"__(
+
+ extern "C" {Return} _{Stub}(void*, {ArgIn}{ArgComma} void*);
+ extern "C" {Return} __wrap__{Target} ({ArgIn});
+ {Return} __wrap__{Target} ({ArgIn})
+ {{
+     return static_cast<{Return}>(_{Stub}(nullptr, {ArgFwd} nullptr));
+ }}
+
+ )__";
+
+     std::string arg_in;
+     std::string arg_fwd;
+     std::string arg_comma;
+
+     if (!params.empty())
+         arg_comma = ", ";
+
+     int i = 0;
+     for (auto arg : params)
+     {
+         if (!arg_in.empty())
+             arg_in += ", ";
+
+         arg_in  += arg + " arg" + std::to_string(i);
+         arg_fwd += fmt::format(fm_fwd, arg, i);
+         i++;
+     }
+
+     std::string cal_fm = class_name_;
+     if (const_)
+         cal_fm += " const";
+     if (volatile_)
+         cal_fm += " volatile";
+
+     cal_fm += " *";
+
+     add_wrap(it->mangled);
+
+     return fmt::format(fm,
+             fmt::arg("Return", return_type),
+             fmt::arg("Stub",   e.mangled),
+             fmt::arg("Target", it->mangled),
+             fmt::arg("ArgIn",  arg_in),
+             fmt::arg("ArgFwd", arg_fwd),
+             fmt::arg("ArgComma", arg_comma)
+             );
 }
 
 

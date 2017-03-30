@@ -24,10 +24,10 @@ struct generator
 {
     outline::storage &st;
     bool indirect;
-
+    bool include_std_except;
     std::string make_fn_fix        (const outline::entry & e);
     std::string make_mem_fix       (const outline::entry & e);
-    std::string make_static_mem_fix(const outline::entry & e) {return std::string("\n//---not implemented--- ") + __PRETTY_FUNCTION__;}
+    std::string make_static_mem_fix(const outline::entry & e);
 
     std::string make_fn        (const outline::entry & e) {return std::string("\n//---not implemented--- ") + __PRETTY_FUNCTION__;}
     std::string make_mem       (const outline::entry & e) {return std::string("\n//---not implemented--- ") + __PRETTY_FUNCTION__;}

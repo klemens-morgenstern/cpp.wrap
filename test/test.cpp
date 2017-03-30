@@ -30,6 +30,11 @@ namespace my { namespace scope_dingens {
 int fn_fix_test(int i);
 }}
 
+struct test_t
+{
+    static int foo(int value);
+    static int bar(int value);
+};
 
 BOOST_AUTO_TEST_CASE(unstubbed)
 {
@@ -47,6 +52,8 @@ BOOST_AUTO_TEST_CASE(unstubbed)
     BOOST_CHECK_EQUAL(v2.size(), 0u);
     v2.push_back(42);
     BOOST_CHECK_EQUAL(v2.size(), 1u);
+    BOOST_CHECK_EQUAL(test_t::foo(42), 84);
+
 }
 
 BOOST_AUTO_TEST_CASE(stubbed)
@@ -65,4 +72,5 @@ BOOST_AUTO_TEST_CASE(stubbed)
     BOOST_CHECK_EQUAL(v2.size(), 0u);
     v2.push_back(42);
     BOOST_CHECK_EQUAL(v2.size(), 42u);
+    BOOST_CHECK_EQUAL(test_t::foo(42), 126);
 }

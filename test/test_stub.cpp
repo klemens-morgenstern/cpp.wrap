@@ -28,6 +28,11 @@ struct test_t
     static int bar(int value);
 };
 
+int test_t::foo(int value)
+{
+    return value * 2;
+}
+
 
 MW_WRAP_FN_FIX((), no_scope, int, (int i))
 {
@@ -56,11 +61,11 @@ MW_WRAP_MEM_FIX(const std::vector<int>, size, std::size_t, () )
 }
 
 
-/*MW_WRAP_STATIC_MEM_FIX(test_t, foo, int, (int value))
+MW_WRAP_STATIC_MEM_FIX(test_t, foo, int, (int value))
 {
-
+    return value * 3;
 }
-
+/*
 struct stubber
 {
     MW_WRAP_FN(fn_test, int, (int i))
@@ -76,11 +81,11 @@ struct stubber
     {
 
     }
-};
+};*/
 
 
 void test_func()
 {
-    stubber s;
+   // stubber s;
 }
-*/
+
