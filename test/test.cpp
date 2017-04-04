@@ -36,6 +36,7 @@ struct test_t
     static int bar(int value);
 };
 
+
 BOOST_AUTO_TEST_CASE(unstubbed)
 {
     BOOST_CHECK_EQUAL(no_scope(5), 47);

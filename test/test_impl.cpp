@@ -18,6 +18,7 @@
 namespace std
 {
 template class std::vector<int>;
+template class std::vector<double>;
 }
 
 int no_scope(int value) {return value + 42;}
@@ -28,3 +29,36 @@ namespace my { namespace scope_dingens {
 int fn_fix_test(int i) {return i - 42;}
 
 }}
+
+int fn_test(int val)
+{
+    return val - 24;
+}
+
+namespace scope {
+namespace sc2 {
+
+int test(std::vector<int> & vec)
+{
+    return vec.at(1);
+}
+
+}
+}
+
+
+struct test_t
+{
+    static int foo(int value);
+    static int bar(int value);
+};
+
+int test_t::foo(int value)
+{
+    return value * 2;
+}
+
+int test_t::bar(int value)
+{
+    return value * 3;
+}
