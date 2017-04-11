@@ -7,9 +7,9 @@
  <pre>
     /  /|  (  )   |  |  /
    /| / |   \/    | /| /
-  / |/  |  / \    |/ |/
- /  /   | (   \   /  |
-           )
+  / |/  |   /\    |/ |/
+ /  /   |  (  \   /  |
+            )
  </pre>
  */
 #include <mw/wrap/generator.hpp>
@@ -189,7 +189,7 @@ extern "C" {Return} __wrap__{Target} ({ArgIn});
             fmt::arg("Target", it->mangled),
             fmt::arg("ArgIn", arg_in),
             fmt::arg("ArgFwd", arg_fwd)
-            );
+             );
 
 }
 
@@ -298,7 +298,7 @@ extern "C" {Return} _{Stub}({Class}, {ArgIn}{ArgComma} void*);
             fmt::arg("ArgIn",  arg_in),
             fmt::arg("ArgFwd", arg_fwd),
             fmt::arg("ArgComma", arg_comma)
-            );
+             );
 }
 
 std::string generator::make_static_mem_fix(const outline::entry & e)
@@ -400,7 +400,7 @@ std::string generator::make_static_mem_fix(const outline::entry & e)
              fmt::arg("ArgIn",  arg_in),
              fmt::arg("ArgFwd", arg_fwd),
              fmt::arg("ArgComma", arg_comma)
-             );
+              );
 }
 
 std::string generator::make_fn (const outline::entry & e)
@@ -552,7 +552,7 @@ extern "C" {Return} __real__{Target} ({ArgIn});
             fmt::arg("Target", it->mangled),
             fmt::arg("ArgIn", arg_in),
             fmt::arg("ArgFwd", arg_fwd)
-            );
+             );
 
     }
 
@@ -584,7 +584,7 @@ void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
                 fmt::arg("Connect", e.mangled),
                 fmt::arg("Disconnect", dis.mangled),
                 fmt::arg("Target", it->mangled)
-                );
+                 );
 
     return value;
 }
@@ -761,7 +761,7 @@ std::string generator::make_mem (const outline::entry & e)
                fmt::arg("ArgFwd", arg_fwd),
                fmt::arg("ArgComma", arg_comma),
                fmt::arg("Class", class_name_)
-               );
+                );
 
        }
 
@@ -793,7 +793,7 @@ void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
                 fmt::arg("Connect", e.mangled),
                 fmt::arg("Disconnect", dis.mangled),
                 fmt::arg("Target", it->mangled)
-                );
+                 );
 
     return value;
 }
@@ -965,7 +965,7 @@ extern "C" {Return} __real__{Target} ({ArgIn});
             fmt::arg("ArgIn", arg_in),
             fmt::arg("ArgFwd", arg_fwd),
             fmt::arg("ArgComma", arg_comma)
-            );
+             );
 
     }
 
@@ -997,7 +997,7 @@ void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
                 fmt::arg("Connect", e.mangled),
                 fmt::arg("Disconnect", dis.mangled),
                 fmt::arg("Target", it->mangled)
-                );
+                 );
 
     return value;
 }

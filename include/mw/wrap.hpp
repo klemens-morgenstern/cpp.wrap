@@ -1,3 +1,22 @@
+/**
+ * @file   mw/wrap.hpp
+ * @date   20.03.2017
+ * @author Klemens D. Morgenstern
+ * @brief Header for the declaration of wrapping functions.
+ *
+ * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+ <pre>
+    /  /|  (  )   |  |  /
+   /| / |   \/    | /| /
+  / |/  |   /\    |/ |/
+ /  /   |  (  \   /  |
+            )
+ </pre>
+ */
+
+#ifndef MW_WRAP_HPP_
+#define MW_WRAP_HPP_
+
 #include <boost/preprocessor/punctuation/remove_parens.hpp>
 #include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/preprocessor/variadic/to_list.hpp>
@@ -15,13 +34,6 @@
 
 namespace mw
 {
-
-class wrapper_already_set : std::runtime_error
-{
-public:
-    using std::runtime_error::runtime_error;
-    using std::runtime_error::operator=;
-};
 
 namespace detail
 {
@@ -105,3 +117,4 @@ BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) FuncName (BOOST_PP_REMOVE_PAR
 
 #define MW_WRAP_STATIC_MEM(Type, Name, Return, Signature)  MW_WRAP_STATIC_MEM_IMPL(Type, Name, Return, Signature, BOOST_PP_CAT(_mw_wrap_static_mem_##Name##__mw__, __LINE__))
 
+#endif

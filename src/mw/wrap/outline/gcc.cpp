@@ -9,9 +9,9 @@
  <pre>
     /  /|  (  )   |  |  /
    /| / |   \/    | /| /
-  / |/  |  / \    |/ |/
- /  /   | (   \   /  |
-               )
+  / |/  |   /\    |/ |/
+ /  /   |  (  \   /  |
+                )
  </pre>
  */
 
@@ -75,7 +75,7 @@ storage parse_gcc(const std::string & file, std::istream & fs_m, std::istream & 
             -x3::hex[set_address] >> +x3::space >>
             (symbol_type_r[set_type] | x3::char_("AaBbCDdGgiINPpRrSsuVvWw")[set_skip]) >>
             x3::space >> (*(x3::char_ - x3::eol))[set_mangled] >> *x3::eol >>x3::eoi
-            );
+             );
 
         if (!b)
         { std::cerr << file << '(' << line << ") Could not parse this line: '" << s_m << "'" << std::endl; std::exit(1);}
@@ -113,7 +113,7 @@ storage parse_gcc(const std::string & file, std::istream & fs_m, std::istream & 
             -x3::hex[cmp_address] >> +x3::space >>
             (symbol_type_r[cmp_type] | x3::char_("AaBbCDdGgiINPpRrSsuVvWw")[cmp_skip]) >>
             x3::space >> (*x3::char_)[set_demangled] >> x3::eoi
-            );
+             );
 
         if (!b)
         {

@@ -1,10 +1,18 @@
-//============================================================================
-// Name        : c++.cpp
-// Author      : Klemens Morgenstern
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
+/**
+ * @file   wrapper_main.cpp
+ * @date   20.03.2017
+ * @author Klemens D. Morgenstern
+ * @brief Main function of the wrapper tool
+ *
+ * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+ <pre>
+    /  /|  (  )   |  |  /
+   /| / |   \/    | /| /
+  / |/  |   /\    |/ |/
+ /  /   |  (  \   /  |
+            )
+ </pre>
+ */
 
 #include <iostream>
 #include <fstream>
@@ -44,7 +52,6 @@ int main(int argc, char **argv)
     std::vector<std::string> binary;
 
     std::string comp;
-    std::string language;
 
     bool indirect_call = false;
     auto at_option_parser = [](string const&s)->pair<string, string>
@@ -63,7 +70,6 @@ int main(int argc, char **argv)
             ("outline,X",       po::value<fs::path>(&mangled),      "outline")
             ("dem-outline,Y",   po::value<fs::path>(&demangled),    "demangled outline")
             ("wrapper-out,v",   po::value<fs::path>(&wrapper_out)->default_value("./wrapper-param"),  "output of the wrapper names for the linker")
-            ("language,L",      po::value<std::string>(&language)->default_value("C++"), "language")
             ("response-file",   po::value<string>(), "can be specified with '@name', too")
             ("config-file,E",   po::value<string>(), "config file")
             ("binary,B",        po::value<std::vector<std::string>>(&binary), "binary file to read the outline from")
