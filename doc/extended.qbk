@@ -1,0 +1,149 @@
+[section:extended In-Depth]
+
+[section:runtime Constructed Wraps]
+
+The macros without the `_FIX` appendix are runtime-wraps. What this means is that they are members of a class and are constructed with it. The macros are:
+
+* MW_WRAP_FN
+* MW_WRAP_MEM
+* MW_WRAP_STATIC_MEM
+
+So let's consider an example, with two functions:
+
+```
+//foo.cpp
+int foo() {return 0;}
+```
+
+```
+//test.cpp
+#include <cassert>
+#include <mw/wrap.hpp>
+
+struct stubber1
+{
+    MW_WRAP_FN(foo, int, ())
+    {
+        return 42;
+    }
+};
+
+struct stubber2
+{
+    MW_WRAP_FN(foo, int, ())
+    {
+        return -1;
+    }
+};
+
+int main(int argc, char * argv[])
+{
+    assert(foo() == 0);
+    {
+        stubber1 s;
+        assert(foo() == 42);
+        //this would throw:
+        //stubber2 s;
+    }
+    {
+        stubber2 s;
+        assert(foo() == -1);        
+    }
+    return 0;
+}
+```
+
+The example given above will create stubs at runtime so that several can be used in the same binary. Additionally the original function can be used.
+This also means that a link to the original function will be created, so there's a guarantee that the symbol-to-wrap is actually defined.
+
+[warning Trying to construct several objects with MW_WRAP_FN will cause an exception to be thrown.]
+
+[endsect]
+
+
+[section:fix Fixed Wraps]
+
+The fix wraps have a post-fix `_FIX` wrap using global functions at compile-time.
+
+```
+//test.cpp
+#include <cassert>
+#include <mw/wrap.hpp>
+
+MW_WRAP_FN_FIX(foo, int, ())
+{
+    return 42;
+}
+
+int main(int argc, char * argv[])
+{
+    assert(foo() == 42);
+    return 0;
+}
+```
+
+The disadvantage here is that the original function cannot be used and thus there will be no link be generated against it.
+
+[endsect]
+
+[section:templater Using Templates]
+
+C++11 introduced the `extern template` which will generate extern linkage for templates. So let's do this in an example, 
+we'll use [@http://en.cppreference.com/w/cpp/container/vector std::vector] for this.
+We'll put the template instanciation into a source fill, which needs to be compiled and linked.
+
+```
+#include <vector>
+namespace std
+{
+template class std::vector<int, std::allocator<int>>; //define it
+}
+```
+
+In our test we tell the compiler that vector will be externally linked and declare the wraps:
+
+```
+#include <vector>
+#include <mw/wrap.hpp>
+
+namespace std
+{
+extern template class std::vector<int, std::allocator<int>>; //declare it
+}
+
+struct stubber
+{
+    std::size_t size_out;
+    int push_back_in;
+    //declare it const!
+    MW_WRAP_MEM(const std::vector<int>, size, std::size_t, ())
+    {
+        return size_out;
+    }
+    MW_WRAP_MEM(std::vector<int>, void, (int&& in)) //only move push_back
+    {
+        size_out = in;
+    }
+};
+
+int main(int argc, char * argv[])
+{
+    std::vector<int> vec = {1,2,3};
+    assert(vec.size() == 3);
+    
+    stubber s;
+    s.size_out = 42;
+    assert(vec.size() == 42); 
+    vec.push_back(3);
+    assert(s.push_back_in == 3);
+    
+    return 0;
+}
+```
+
+By utilizing `extern template` we can thus wrap template functions or member functions of template classes. 
+
+[note The class-name can be put into parenthesis if it is a template containing a comma.]
+
+[endsect]
+[endsect]

@@ -1,0 +1,15 @@
+[section:faq Frequently asked questioned]
+
+[section:compile_units Why does it only work across compile units / with external linkage?]
+
+The limit comes from the way the function call is implemented. When the compiler sees the symbol within in the same compile unit, there is no need to link that symbol, 
+because it is already defined. That is, the connection the linker generates is of no need for internal linking.
+
+[endsect]
+
+[section:inline Does it work with inline functions?]
+It does not. An inline function is not linked, thus the linking cannot be modified.
+[endsect]
+
+
+[endsect]

@@ -1,0 +1,76 @@
+[section:tool mw-wrap]
+
+[table Parameter overview
+    [[Name]       [Short] [Description] [Type] [Default Argument] ]
+    [[`help`]     [`H`] [Print the help message] [['flag]] [`false`]]
+    [[`output`]   [`O`] [Output source file] [path] ["./mw-wrapper.cpp"]]
+    [[`compiler`] [`C`] [Compiler to be used (clang, gcc)] [string] [['none]]]
+    [[`outline`]  [`X`] [The mangled outline] [path] [['none]]]
+    [[`dem-outline`]  [`Y`] [The demangled outline] [path] [['none]]]
+    [[`wrapper-out`] [`W`] [The wrapper options output for the linker] [path] ["./wrapper-param"]]
+    [[`response-file`] []  [Response file, i.e. file containing options normally passed. Can also be used as `@file.opt`] [path] [['none]]]
+    [[`config-file`] [`E`] [Config file, can contain similar parameters as the `response-file`] [path] [['none]]]
+    [[`binary`] [`B`] [The binary/binaries the outline shall be read from] [list of paths] [['none]]]
+    [[`template`] [`T`] [Template file for the generated code.] [path] [['none]]]
+    [[`nm`] [`N`] [Custom nm command] [path] ["nm]]
+    [[`indirect`] [`I`] [Flag indicating that the linker is called through the compiler, e.g. `g++`] [['flag]] [`false`]]
+]
+
+[note `binary` can be passed as a positional argument, i.e. as the first argument without the `--binary`/`-B`. E.g. `mw-wrap my-binary.o`.]
+
+[section:outline Obtaining the outline]
+
+`mw-wrap` needs the mangled and the demandled outline. These can either be obtained prior to calling `mw-wrap` and then passed to the tool. For a binary `foo.o` this might
+look like this:
+
+```
+nm foo.o > foo.nm
+nm foo.o --demangle > foo.dem
+mw-wrap --dem-outline foo.dem --outline foo.nm
+```
+
+Alternatively `mw-wrap` can call the tool directly, and the command can be set as parameter.
+
+```
+mw-wrap --nm nm --binary foo.o
+mw-wrap foo.o
+```
+
+The second version is the short form.
+
+[endsect]
+
+
+[section:config Config files / Response file]
+
+The tool supports two ways to get additional parameters passed from a file. One is the response file, which is verbatim the same as passed as the parameters.
+
+```
+--outline foo.nm --dem-outline foo.dem
+```
+
+These options can be loaded in the following way.
+
+```
+mw-wrap @response-file
+mw-wrap --response-file response-file
+```
+
+[note This feature is also provided by gcc and many of the linux tools. This is how the wrapper output options shall be used.]
+
+The config-file has a different format like this.
+
+```
+outline=foo.nm
+dem-outline=foo.dem
+```
+
+And this can be used like this.
+
+```
+mw-wrap --config-file file.cfg
+```
+
+
+[endsect]
+[endsect]
