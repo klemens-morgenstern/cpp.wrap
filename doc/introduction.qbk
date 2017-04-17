@@ -24,39 +24,14 @@ void bar(int i) { }
 Now for our test we want to redirect the call of `bar` from `foo` during link-time. This can advantageous, 
 because the produced binary code is the same, while only the sections and labels are changed.
 
-```
-///wrap.cpp
-#include <mw/wrap.hpp>
-#include <cassert>
+[def MW_WRAP_FN [link wrap.reference.header.MW_WRAP_FN MW_WRAP_FN]]
+[def mw/wrap.hpp [link wrap.reference.header mw/wrap.hpp]]
 
-struct stubber
-{
-	int call_cnt = 0;
-	int i_in = 0;
-	
-	MW_WRAP_FN(bar, void, (int i))
-	{
-	    in_i = i;
-	    call_cnt++;
-	}
-};
-
-int main(int argc, char* argv[])
-{
-	stubber s;
-	assert(s.call_cnt == 0);
-	assert(s.i_in == 0);
-	
-	foo(42);
-	
-	assert(s.call_cnt == 1);
-	assert(s.i_in == 42);
-		
-    return 0;
-}
-```
+[import ../example/intro.cpp]
+[intro]
 
 In order for that too work, we need to generate an extra source file from the generated objects. This is done with our tool, so the name mangling is taken care of.
+[teletype]
 
 ```
 g++ -c foo.cpp -o foo.o
@@ -73,6 +48,6 @@ to use `g++` and not `ld` directly, so the tool prepends `-Wl,`.
 
 [note For support or feature requests, feel free to write us an [@mailto:info@mw-sc.de E-Mail]]
 
-[important This tool requires [@www.boost.org boost] to build.]
+[important This tool and it's header require [@www.boost.org boost] to build.]
 
 [endsect]

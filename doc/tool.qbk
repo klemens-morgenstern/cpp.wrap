@@ -1,5 +1,6 @@
 [section:tool mw-wrap]
 
+[teletype] 
 [table Parameter overview
     [[Name]       [Short] [Description] [Type] [Default Argument] ]
     [[`help`]     [`H`] [Print the help message] [['flag]] [`false`]]

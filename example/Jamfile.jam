@@ -1,0 +1,12 @@
+project : requirements
+  <include>../../..
+  <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+  <target-os>windows:<define>WIN32_LEAN_AND_MEAN
+;
+
+import testing ;
+
+compile fixed_stub.cpp ;
+compile intro.cpp ;
+compile multiple_stubs.cpp ;
+compile template_stub.cpp ;
