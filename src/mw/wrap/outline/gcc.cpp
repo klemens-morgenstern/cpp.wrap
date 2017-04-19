@@ -73,7 +73,7 @@ storage parse_gcc(const std::string & file, std::istream & fs_m, std::istream & 
 
         auto b = x3::parse(itr, s_m.end(),
             -x3::hex[set_address] >> +x3::space >>
-            (symbol_type_r[set_type] | x3::char_("AaBbCDdGgiINPpRrSsuVvWw")[set_skip]) >>
+            (symbol_type_r[set_type] | x3::char_("AaBbCDdGgiINnPpRrSsuVvWw")[set_skip]) >>
             x3::space >> (*(x3::char_ - x3::eol))[set_mangled] >> *x3::eol >>x3::eoi
              );
 
@@ -111,7 +111,7 @@ storage parse_gcc(const std::string & file, std::istream & fs_m, std::istream & 
         itr = s_d.begin();
         b = x3::parse(itr, s_d.end(),
             -x3::hex[cmp_address] >> +x3::space >>
-            (symbol_type_r[cmp_type] | x3::char_("AaBbCDdGgiINPpRrSsuVvWw")[cmp_skip]) >>
+            (symbol_type_r[cmp_type] | x3::char_("AaBbCDdGgiINnPpRrSsuVvWw")[cmp_skip]) >>
             x3::space >> (*x3::char_)[set_demangled] >> x3::eoi
              );
 
