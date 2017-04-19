@@ -15,12 +15,14 @@ echo "my path" $(my-path) ;
 
 if ! [ path.exists $(my-path)/wrapper.opt ]
 {
-	SHELL "echo foo > $(my-path)\\wrapper.opt" ;
+    local p = [ path.join $(my-path) wrapper.opt ] ;
+	SHELL "echo foo > $(p)" ;
 }
 
 if ! [ path.exists $(my-path)/test_gen.cpp ]
 {
-	SHELL "echo foo > $(my-path)\\test_gen.cpp" ;
+    local p = [ path.join $(my-path) test_gen.cpp ] ;
+	SHELL "echo foo >  $(p)" ;
 }
 
 run ..//mw-wrap : --template=test_tpl.cpp --wrapper-out=wrapper.opt --output=test_gen.cpp --indirect : test_impl test_stub : : mw-wrap-run ;
