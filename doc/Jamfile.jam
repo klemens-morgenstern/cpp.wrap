@@ -24,12 +24,11 @@ boostbook standalone
 :
   <dependency>images
   <quickbook-binary-dependencies>/boost//tools/quickbook
-  <xsl:param>boost.root=$(boost-loc) 
+  <xsl:param>boost.root=../..
   <xsl:param>html.stylesheet=../../../doc/src/mwbook.css
   <xsl:param>boost.image.src=../../../doc/src/images/mw_black.png
   <xsl:param>boost.header.root=../include
   <xsl:param>boost.doxygen.header.prefix='mw'
-  <xsl:param>boost.root=../../..
   <xsl:param>boost.website="http://www.mw-sc.de/"
   <xsl:param>boost.libraries="http://mw-sc.de/"
   <prefix>$(strip-path)
