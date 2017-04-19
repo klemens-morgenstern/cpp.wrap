@@ -1,7 +1,7 @@
 # [M&W Debugger Runner](https://github.com/mw-sc/mw.wrap)
 
 ### About
-This tool allows you to automatize running a debugger and add functionality through plugins.
+This tool allows you to stub function calls at link-time.
 
 ### Test results
 
