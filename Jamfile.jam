@@ -11,7 +11,6 @@ project wrap :
 	
 exe mw-wrap : wrapper_main.cpp 
 	mw/wrap/outline/gcc.cpp 
-	mw/wrap/generate_wrappers.cpp
 	mw/wrap/generator.cpp
     /boost//system
     /boost//program_options
