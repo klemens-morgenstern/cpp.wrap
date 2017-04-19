@@ -19,7 +19,7 @@
 #include <iostream>
 
 #include <boost/spirit/home/x3.hpp>
-#include <cppformat/format.h>
+#include <fmt/format.h>
 
 
 namespace mw {

@@ -9,20 +9,21 @@ obj test_impl : test_impl.cpp : <link>static ;
 obj test : test.cpp : <link>static ;
 obj test_dyn : test_dyn.cpp : <link>static ;
 
-
 local my-path = [ path-constant TOP : . ] ;
-echo "my path" $(my-path) ;
 
-if ! [ path.exists $(my-path)/wrapper.opt ]
+local wrapper-path = [ path.join $(my-path) wrapper.opt ] ;
+if ! [ path.exists $(wrapper-path) ]
 {
-    local p = [ path.join $(my-path) wrapper.opt ] ;
+    local p = [ path.native $(wrapper-path) ] ;
 	SHELL "echo foo > $(p)" ;
 }
 
-if ! [ path.exists $(my-path)/test_gen.cpp ]
+local test-gen-path = [ path.join $(my-path) test_gen.cpp ] ;
+if ! [ path.exists $(test-gen-path) ]
 {
-    local p = [ path.join $(my-path) test_gen.cpp ] ;
+    local p = [ path.native $(test-gen-path) ] ;
 	SHELL "echo foo >  $(p)" ;
+    alias test_gen.cpp : dummy.cpp ;
 }
 
 run ..//mw-wrap : --template=test_tpl.cpp --wrapper-out=wrapper.opt --output=test_gen.cpp --indirect : test_impl test_stub : : mw-wrap-run ;

@@ -30,7 +30,6 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <mw/wrap/generate_wrappers.hpp>
 #include <mw/wrap/generator.hpp>
 #include <mw/wrap/outline/gcc.hpp>
 
