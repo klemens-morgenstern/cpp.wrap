@@ -85,7 +85,7 @@ struct stubber
         f2(*this_, i);
     }
 
-    MW_WRAP_MEM((const std::vector<double, std::allocator<double>>), capacity, std::size_t, ())
+    MW_WRAP_MEM((const std::vector<double, std::allocator<double>>), capacity, (std::vector<double, std::allocator<double>>::size_type), ())
     {
         return f3(*this_);
     }
