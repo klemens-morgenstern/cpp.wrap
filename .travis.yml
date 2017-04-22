@@ -30,7 +30,7 @@ before_script:
     - MW_TEST=$HOME/mw.test
     - git init $MW_TEST
     - cd $MW_TEST
-    - if [ $(BRANCH_TO_TEST) = "master" ]; then
+    - if [ $BRANCH_TO_TEST = "master" ]; then
       MW_BRANCH=master; 
       else MW_BRANCH=develop; fi
     - git remote add --no-tags -t $MW_BRANCH origin https://github.com/mw-sc/mw.test.git
