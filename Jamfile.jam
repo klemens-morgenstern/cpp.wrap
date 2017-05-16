@@ -16,3 +16,5 @@ exe mw-wrap : wrapper_main.cpp
     /boost//program_options
     /boost//filesystem
     ..//format ;
+    
+alias headers : ../include/mw/wrap.hpp ;
