@@ -1,4 +1,4 @@
-# [M&W Debugger Runner](https://github.com/mw-sc/mw.wrap)
+# [M&W Wrap](https://github.com/mw-sc/mw.wrap)
 
 ### About
 This tool allows you to stub function calls at link-time.
