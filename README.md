@@ -5,10 +5,10 @@ This tool allows you to stub function calls at link-time.
 
 ### Test results
 
-Branches        | Build         | 
-----------------|-------------- |
+Branches        | Build        | Coverage Status |
+----------------|--------------|-----------------|
 Develop:        | [![Build Status](https://travis-ci.org/mw-sc/mw.wrap.svg?branch=develop)](https://travis-ci.org/mw-sc/mw.wrap) | [![Coverage Status](https://coveralls.io/repos/github/mw-sc/mw.wrap/badge.svg?branch=develop)](https://coveralls.io/github/mw-sc/mw.wrap?branch=develop) |
-Master:         | [![Build Status](https://travis-ci.org/mw-sc/mw.wrap.svg?branch=master)](https://travis-ci.org/mw-sc/mw.wrap)  |  [![Coverage Status](https://coveralls.io/repos/github/mw-sc/mw.wrap/badge.svg?branch=master)](https://coveralls.io/github/mw-sc/mw.wrap?branch=master)   |
+Master:         | [![Build Status](https://travis-ci.org/mw-sc/mw.wrap.svg?branch=master)](https://travis-ci.org/mw-sc/mw.wrap)  | [![Coverage Status](https://coveralls.io/repos/github/mw-sc/mw.wrap/badge.svg?branch=master)](https://coveralls.io/github/mw-sc/mw.wrap?branch=master)   |
 [Open Issues](https://github.com/mw-sc/mw.wrap/issues)
 
 [Latest developer documentation](http://mw-sc.github.io/wrap/)
