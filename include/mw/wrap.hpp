@@ -85,11 +85,29 @@ BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) BOOST_PP_CAT(BOOST_PP_CAT(_mw
 
 #define MW_WRAP_FN_FIX(...) BOOST_PP_OVERLOAD(MW_WRAP_FN_FIX_, __VA_ARGS__)(__VA_ARGS__)
 
+
+#define MW_WRAP_FN_FIX_NO_ARGS_3(Scope, Name, Return)  \
+BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) BOOST_PP_CAT(BOOST_PP_CAT(_mw_wrap_fn_fix_, MW_WRAP_MAKE_SCOPE(BOOST_PP_REMOVE_PARENS(Scope))), __mw__##Name)  \
+    ( ::mw::detail::tag<BOOST_PP_REMOVE_PARENS(Return)> * )
+
+#define MW_WRAP_FN_FIX_NO_ARGS_2(Name, Return)  MW_WRAP_FN_FIX_NO_ARGS_3( (), Name, Return)
+
+#define MW_WRAP_FN_FIX_NO_ARGS(...) BOOST_PP_OVERLOAD(MW_WRAP_FN_FIX_NO_ARGS_, __VA_ARGS__)(__VA_ARGS__)
+
+
 #define MW_WRAP_MEM_FIX(Type, Name, Return, Signature) \
 BOOST_SYMBOL_EXPORT Return BOOST_PP_CAT(_mw_wrap_mem_fix_, Name) (BOOST_PP_REMOVE_PARENS(Type) * const this_ MW_VA_ARGS Signature, ::mw::detail::tag<Return> * = nullptr)
 
+#define MW_WRAP_MEM_FIX_NO_ARGS(Type, Name, Return) \
+BOOST_SYMBOL_EXPORT Return BOOST_PP_CAT(_mw_wrap_mem_fix_, Name) (BOOST_PP_REMOVE_PARENS(Type) * const this_, ::mw::detail::tag<Return> * = nullptr)
+
+
 #define MW_WRAP_STATIC_MEM_FIX(Type, Name, Return, Signature) \
 BOOST_SYMBOL_EXPORT Return BOOST_PP_CAT(_mw_wrap_static_mem_fix_, Name) (BOOST_PP_REMOVE_PARENS(Type) * const MW_VA_ARGS Signature, ::mw::detail::tag<Return> * = nullptr)
+
+#define MW_WRAP_STATIC_MEM_FIX_NO_ARGS(Type, Name, Return) \
+BOOST_SYMBOL_EXPORT Return BOOST_PP_CAT(_mw_wrap_static_mem_fix_, Name) (BOOST_PP_REMOVE_PARENS(Type) * const, ::mw::detail::tag<Return> * = nullptr)
+
 
 #define MW_WRAP_MAKE_CONNECTOR_IMPL(Value) ::mw::detail::connector_impl<decltype(Value), Value>()
 
@@ -98,11 +116,21 @@ BOOST_SYMBOL_EXPORT Return BOOST_PP_CAT(_mw_wrap_static_mem_fix_, Name) (BOOST_P
 BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) FuncName  \
     ( BOOST_PP_REMOVE_PARENS(Signature) )
 
-
 #define MW_WRAP_FN_4(Scope, Name, Return, Signature)  MW_WRAP_FN_IMPL(Scope, Name, Return, Signature, BOOST_PP_CAT(_mw_wrap_fn_ , BOOST_PP_CAT( MW_WRAP_MAKE_SCOPE(BOOST_PP_REMOVE_PARENS(Scope)), BOOST_PP_CAT(__mw__##Name##__mw__, __LINE__))))
 #define MW_WRAP_FN_3(Name, Return, Signature)         MW_WRAP_FN_4( (), Name, Return, Signature)
 
 #define MW_WRAP_FN(...) BOOST_PP_OVERLOAD(MW_WRAP_FN_, __VA_ARGS__)(__VA_ARGS__)
+
+
+#define MW_WRAP_FN_NO_ARGS_IMPL(Scope, Name, Return, FuncName) \
+::mw::detail::connector BOOST_PP_CAT(_mw_wrap_connector, __COUNTER__) { this, MW_WRAP_MAKE_CONNECTOR_IMPL (& std::remove_pointer_t<decltype(this)>:: FuncName )}; \
+BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) FuncName ( )
+
+#define MW_WRAP_FN_NO_ARGS_3(Scope, Name, Return)  MW_WRAP_FN_NO_ARGS_IMPL(Scope, Name, Return, BOOST_PP_CAT(_mw_wrap_fn_ , BOOST_PP_CAT( MW_WRAP_MAKE_SCOPE(BOOST_PP_REMOVE_PARENS(Scope)), BOOST_PP_CAT(__mw__##Name##__mw__, __LINE__))))
+#define MW_WRAP_FN_NO_ARGS_2(Name, Return)         MW_WRAP_FN_NO_ARGS_3( (), Name, Return)
+
+#define MW_WRAP_FN_NO_ARGS(...) BOOST_PP_OVERLOAD(MW_WRAP_FN_NO_ARGS_, __VA_ARGS__)(__VA_ARGS__)
+
 
 #define MW_WRAP_MEM_IMPL(Type, Name, Return, Signature, FuncName) \
 ::mw::detail::connector BOOST_PP_CAT(_mw_wrap_connector, __COUNTER__) { this, MW_WRAP_MAKE_CONNECTOR_IMPL (& std::remove_pointer_t<decltype(this)>:: FuncName )}; \
@@ -111,10 +139,25 @@ BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) FuncName (BOOST_PP_REMOVE_PAR
 #define MW_WRAP_MEM(Type, Name, Return, Signature)  MW_WRAP_MEM_IMPL(Type, Name, Return, Signature, BOOST_PP_CAT(_mw_wrap_mem_##Name##__mw__, __LINE__))
 
 
+#define MW_WRAP_MEM_NO_ARGS_IMPL(Type, Name, Return, FuncName) \
+::mw::detail::connector BOOST_PP_CAT(_mw_wrap_connector, __COUNTER__) { this, MW_WRAP_MAKE_CONNECTOR_IMPL (& std::remove_pointer_t<decltype(this)>:: FuncName )}; \
+BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) FuncName (BOOST_PP_REMOVE_PARENS(Type) * const this_ )
+
+#define MW_WRAP_MEM_NO_ARGS(Type, Name, Return)  MW_WRAP_MEM_IMPL(Type, Name, Return, BOOST_PP_CAT(_mw_wrap_mem_##Name##__mw__, __LINE__))
+
+
 #define MW_WRAP_STATIC_MEM_IMPL(Type, Name, Return, Signature, FuncName) \
 ::mw::detail::connector BOOST_PP_CAT(_mw_wrap_connector, __COUNTER__) { this, MW_WRAP_MAKE_CONNECTOR_IMPL (& std::remove_pointer_t<decltype(this)>:: FuncName )}; \
 BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) FuncName (BOOST_PP_REMOVE_PARENS(Type) * const MW_VA_ARGS Signature )
 
 #define MW_WRAP_STATIC_MEM(Type, Name, Return, Signature)  MW_WRAP_STATIC_MEM_IMPL(Type, Name, Return, Signature, BOOST_PP_CAT(_mw_wrap_static_mem_##Name##__mw__, __LINE__))
+
+
+#define MW_WRAP_STATIC_MEM_NO_ARGS_IMPL(Type, Name, Return, FuncName) \
+::mw::detail::connector BOOST_PP_CAT(_mw_wrap_connector, __COUNTER__) { this, MW_WRAP_MAKE_CONNECTOR_IMPL (& std::remove_pointer_t<decltype(this)>:: FuncName )}; \
+BOOST_SYMBOL_EXPORT BOOST_PP_REMOVE_PARENS(Return) FuncName (BOOST_PP_REMOVE_PARENS(Type) * const)
+
+#define MW_WRAP_STATIC_MEM_NO_ARGS(Type, Name, Return)  MW_WRAP_STATIC_MEM_IMPL(Type, Name, Return, BOOST_PP_CAT(_mw_wrap_static_mem_##Name##__mw__, __LINE__))
+
 
 #endif
