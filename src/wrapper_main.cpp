@@ -146,11 +146,23 @@ int main(int argc, char **argv)
 
             auto nm_cmd_ = fs::exists(nm_cmd) ? fs::path(nm_cmd) : boost::process::search_path(nm_cmd);
 
-            boost::process::spawn(nm_cmd_, b,                boost::process::std_out > ms);
-            boost::process::spawn(nm_cmd_, b, L"--demangle", boost::process::std_out > ds);
+            boost::process::spawn(nm_cmd_, b,               boost::process::std_out > ms);
+            boost::process::spawn(nm_cmd_, b, "--demangle", boost::process::std_out > ds);
             auto st_in = mw::wrap::outline::parse_gcc(b, ms, ds);
+
             st.insert(st.end(), std::make_move_iterator(st_in.begin()), std::make_move_iterator(st_in.end()));
         }
+
+        if (st.empty())
+        {
+            std::cerr << "Outline is empty" << std::endl;
+            return 1;
+        }
+    }
+    else
+    {
+        std::cerr << "Unknown compiler " << comp << std::endl;
+        return 1;
     }
 
     mw::wrap::generator gen{st, indirect_call};
