@@ -20,7 +20,7 @@
 
 #include <boost/spirit/home/x3.hpp>
 #include <fmt/format.h>
-
+#include <boost/algorithm/string/trim.hpp>
 
 namespace mw {
 namespace wrap {
@@ -346,7 +346,8 @@ std::string generator::make_static_mem_fix(const outline::entry & e)
          needed += " volatile";
 
      auto it = std::find_if(st.begin(), st.end(),
-                [&needed](const outline::entry & e){return boost::starts_with(e.demangled, needed);});
+                [&needed](const outline::entry & e)
+                {return boost::starts_with(e.demangled, needed);});
 
      if (it == st.end())
          throw std::runtime_error("Could not find required function: '" + needed + "'");
@@ -492,7 +493,11 @@ std::string generator::make_fn (const outline::entry & e)
     needed += ')';
 
     auto it = std::find_if(st.begin(), st.end(),
-               [&needed](const outline::entry & e){return boost::starts_with(e.demangled, needed);});
+               [&needed, &scp_val, &name](const outline::entry & e)
+               {
+                    return boost::starts_with(e.demangled, needed)
+                        || (scp_val.empty() && (name == boost::trim_copy(e.demangled)));
+               });
 
     if (it == st.end())
         throw std::runtime_error("Could not find required function: '" + needed + "'");

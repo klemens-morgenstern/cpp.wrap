@@ -129,6 +129,13 @@ int main(int argc, char **argv)
         return 1;
     }
 
+
+    if (vm.count("help") || vm.empty())
+    {
+       std::cout << desc << endl;
+       return 0;
+    }
+
     mw::wrap::outline::storage st;
     if ((comp == "gcc") || (comp == "clang") || comp.empty())
     {
