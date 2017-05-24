@@ -146,8 +146,8 @@ int main(int argc, char **argv)
 
             auto nm_cmd_ = fs::exists(nm_cmd) ? fs::path(nm_cmd) : boost::process::search_path(nm_cmd);
 
-            boost::process::spawn(nm_cmd_, b,               boost::process::std_out > ms);
-            boost::process::spawn(nm_cmd_, b, "--demangle", boost::process::std_out > ds);
+            boost::process::spawn(nm_cmd_, b, "--no-demangle", boost::process::std_out > ms);
+            boost::process::spawn(nm_cmd_, b,    "--demangle", boost::process::std_out > ds);
             auto st_in = mw::wrap::outline::parse_gcc(b, ms, ds);
 
             st.insert(st.end(), std::make_move_iterator(st_in.begin()), std::make_move_iterator(st_in.end()));
