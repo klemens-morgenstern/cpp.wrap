@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     fs::path wrapper_out;
     fs::path tpl_f;
 
-    std::string nm_cmd;
+    fs::path nm_cmd;
     std::vector<std::string> binary;
 
     std::string comp;
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
             ("config-file,E",   po::value<string>(), "config file")
             ("binary,B",        po::value<std::vector<std::string>>(&binary), "binary file to read the outline from")
             ("template,T",      po::value<fs::path>(&tpl_f), "Template file")
-            ("nm,N",            po::value<std::string>(&nm_cmd)->default_value("nm"), "Custom nm command")
+            ("nm,N",            po::value<fs::path>(&nm_cmd)->default_value("nm"), "Custom nm command")
             ("indirect,I",      po::bool_switch(&indirect_call), "Indirect call, i.e. though g++/gcc command. I.e. add -Wl,")
             ;
 
@@ -150,7 +150,11 @@ int main(int argc, char **argv)
         {
             boost::process::ipstream ms;
             boost::process::ipstream ds;
-
+            
+#if defined(BOOST_WINDOWS_API)
+            if (nm_cmd.extension().empty())
+                nm_cmd += ".exe";
+#endif
             auto nm_cmd_ = fs::exists(nm_cmd) ? fs::path(nm_cmd) : boost::process::search_path(nm_cmd);
 
             boost::process::spawn(nm_cmd_, b, "--no-demangle", boost::process::std_out > ms);
