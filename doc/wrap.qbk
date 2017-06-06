@@ -6,11 +6,10 @@
     https://www.apache.org/licenses/LICENSE-2.0)
 ]
 
-[library Wrap
+[library mw.wrap
     [quickbook 1.6]
     [id wrap] 
     [dirname wrap]
-    [version 1.0]
     [authors [Morgenstern, Klemens David], [Walther, Timon]]
     [copyright 2017 Klemens D. Morgenstern, Timon Walther]
     [license Distributed under the Apache License, Version 2.0.
