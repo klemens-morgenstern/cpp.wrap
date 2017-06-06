@@ -1,6 +1,7 @@
 env:
   global:
   - BRANCH_TO_TEST=$TRAVIS_BRANCH
+  - secure: "wOklWejh6Y7d9R5PulYFCo9lNW3O10yKh7SKQ+euKHmqwryJzz858Nt7UCNO8W317/XnS1uP6r4QfGsE2zZRMQu0qYL+icg6VOxxMwcW6+lCcBbmaBCkiLdhVDmcn0dmpj0GbbMOCNtETRH8M+Fu6A40HnJv9Akkwc4azxY7dMDfi/+SWw7+p3s7d2NvuTj3L784AbFW8iQWl3pYdOiGO6J97rzxAzo2lpiIMJ+18e2sfAxb0Lodvr0qpALbtee0n8t3AjjtFNPwOPAENl7PPuycKNrTvqqgBxFodX8WMfz/eUxnLweq7pj7cG1qqKQoJDkXO9duf5aMBq3jV7TzfHPxh9VqPxHI8I6ak+KQotEfkafKYwLJYa8rj8Z69ysacIzhdxEZezQXOg1ZW8BJhnu++maatiPlfyaoYntLbjIlm/uuqzMs3K/HmxMmC2amy/DVx73PSRsyKSYvsqdgkiB58xHJkpgsRx50AUEfwbW93DSiBxV8tBcDjPJ+/RmxrwyGkYpoMRw9lV2ypmEyjsFrarv+zKDzReupe+FYRxhraM3GdNaCl46PSdGkceZcVZikiqZ44JwWlpr2TVUeeW90cVHAub4IPuwHsnwsV5xJ35/9WK6VtTyK4K4vt9Fef63Qxd0eajCy2OllRqYRwxW5lJZkNbYQVNYm7hE6ul4="
   matrix:
   #- ADDRESS_MODEL=32
   - ADDRESS_MODEL=64
@@ -18,6 +19,9 @@ addons:
     - python-yaml
     - gcc-6
     - g++-6
+    - xsltproc
+    - docbook-xsl
+    - doxygen
 before_script:
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
     - cd $HOME
@@ -69,3 +73,14 @@ after_success:
     - gem install coveralls-lcov
     # https://github.com/okkez/coveralls-lcov/issues/2
     - coveralls-lcov  --source-encoding=ISO-8859-1 ./coverals/coverage.info
+    - if [ $BRANCH_TO_TEST = "develop" ]; then 
+         cd ../doc; $BOOST/b2 -j4 -sBOOST_ROOT=$BOOST linkflags="-ldl -pthread" -sBOOST_BUILD_PATH=.;
+         git clone https://$GH_TOKEN@github.com/mw-sc/mw-sc.github.io.git -b master $HOME/pages > /dev/null 2>&1 ;
+         cd html; cp -r * $HOME/pages/wrap;
+         cd $HOME/pages;
+         git config user.email "travis@travis-ci.og";
+         git config user.name "Travis";
+         git commit -am "Updated wrap documentation"; 
+         git remote add origin-pages https://${GH_TOKEN}@github.com/mw-sc/mw-sc.github.io.git > /dev/null 2>&1;
+         git push --quiet --set-upstream origin-pages master;
+         fi 
