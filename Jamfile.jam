@@ -15,6 +15,9 @@ exe mw-wrap : wrapper_main.cpp
     /boost//system
     /boost//program_options
     /boost//filesystem
-    ..//format ;
+    ..//format 
+    :
+    <target-os>linux:<linkflags>"-Wl,-rpath=."
+    ;
     
 alias headers : ../include/mw/wrap.hpp ;
