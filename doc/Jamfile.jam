@@ -24,12 +24,5 @@ boostbook standalone
 :
   <dependency>images
   <quickbook-binary-dependencies>/boost//tools/quickbook
-  <xsl:param>boost.root=../..
-  <xsl:param>html.stylesheet=../../../doc/src/cppbook.css
-  <xsl:param>boost.image.src=../../../doc/src/images/CPP_black.png
-  <xsl:param>boost.header.root=../include
-  <xsl:param>boost.doxygen.header.prefix='cpp'
-  <xsl:param>boost.website="http://www.cpp-sc.de/"
-  <xsl:param>boost.libraries="http://cpp-sc.de/"
   <prefix>$(strip-path)
 ;

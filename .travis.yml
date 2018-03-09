@@ -35,19 +35,20 @@ before_script:
 script:
 - cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
 - cmake --build . -- -j4
+- cd test
 - ctest
 after_success:
     # Copying Coveralls data to a separate folder
     - mkdir -p ./coverals
-    - find ../../bin.cpp/wrap -name *.gcda -exec cp "{}" ./coverals/ \;
-    - find ../../bin.cpp/wrap -name *.gcno -exec cp "{}" ./coverals/ \;
+    - find . -name *.gcda -exec cp "{}" ./coverals/ \;
+    - find . -name *.gcno -exec cp "{}" ./coverals/ \;
 
     # Preparing Coveralls data by changind data format to a readable one
     - git clone https://github.com/linux-test-project/lcov.git lcov_dir
     - GCOV_VERSION="--gcov-tool gcov-6"
-    - LCOV="$CPP_TEST/wrap/test/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
+    - LCOV="$TRAVIS_BUILD_DIR/test/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
     - $LCOV --directory ./coverals --base-directory ./ --capture --output-file ./coverals/coverage.info
-    - $LCOV --remove ./coverals/coverage.info "$CPP_TEST/wrap/test/*" "*boost*" "/usr/*" "$CPP_TEST/libs/*" "$CPP_TEST/dbg-runner/*" -o ./coverals/coverage.info
+    - $LCOV --remove ./coverals/coverage.info "$TRAVIS_BUILD_DIR/test/*" "*boost*" "/usr/*" -o ./coverals/coverage.info
 
     # Sending data to Coveralls
     - gem install coveralls-lcov
