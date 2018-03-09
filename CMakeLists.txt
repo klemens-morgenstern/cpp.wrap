@@ -1,7 +1,7 @@
 project(cpp.wrap)
 
 cmake_minimum_required(VERSION 3.9)
-find_package(boost COMPONENTS program_options REQUIRED)
+find_package(Boost COMPONENTS program_options REQUIRED)
 include_directories(./include ${Boost_INCLUDE_DIRS} libs/fmt/include)
 link_directories(${Boost_LIBRARY_DIRS})
 
