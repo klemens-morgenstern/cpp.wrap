@@ -18,8 +18,8 @@ addons:
     - python-yaml
     - gcc-6
     - g++-6
-    - cmake
-    - cmake-data
+    - cmake3
+    - cmake3-data
 before_script:
     - export CC=/usr/bin/gcc-6
     - export CXX=/usr/bin/g++-6
