@@ -4,13 +4,6 @@
  * @author Klemens D. Morgenstern
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-  <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-                )
- </pre>
  */
 
 #include <vector>

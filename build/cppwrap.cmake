@@ -16,7 +16,7 @@ function(generate_wrapped_cpp name)
     else()
         math(EXPR tpl_loc2 ${tpl_loc}+1 )
         list(GET ARGV ${tpl_loc2} tpl)
-        set(tpl --template=${tpl})
+        set(tpl_arg --template=${tpl})
         list(REMOVE_AT ARGV ${tpl_loc} ${tpl_loc2})
     endif()
 
@@ -26,13 +26,13 @@ function(generate_wrapped_cpp name)
     else()
         math(EXPR wrapper_opt_loc2 ${wrapper_opt_loc}+1 )
         list(GET ARGV ${wrapper_opt_loc2} wrapper_opt)
-        set(wrapper_opt --wrapper-out=${wrapper_opt})
+        set(wrapper_opt_arg --wrapper-out=${wrapper_opt})
         list(REMOVE_AT ARGV ${wrapper_opt_loc} ${wrapper_opt_loc2})
     endif()
-
+    list(REMOVE_AT ARGV 0)
     add_custom_target(wrap_${name}
-            COMMAND $<TARGET_FILE:cppwrap> --output=${name} ${ARGV} ${tpl} ${indirect} ${wrapper_opt}
+            COMMAND $<TARGET_FILE:cppwrap> --output=${name} ${ARGV} ${tpl_arg} ${indirect} ${wrapper_opt_arg}
             BYPRODUCTS ${name} ${wrapper_opt}
-            DEPENDENCY cpprwap ${ARGV})
+            DEPENDS cpprwap ${ARGV} ${tpl})
 
 endfunction(generate_wrapped_cpp)
