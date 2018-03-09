@@ -33,7 +33,7 @@ before_script:
     - "./b2 headers program_options"
     - cd $TRAVIS_BUILD_DIR
 script:
-- cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
+- cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST -DBoost_ADDITIONAL_VERSIONS="1.66.0"  .
 - cmake --build . -- -j4
 - ctest
 after_success:
