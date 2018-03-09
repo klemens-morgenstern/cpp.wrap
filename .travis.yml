@@ -30,7 +30,7 @@ before_script:
     - BOOST=$HOME/boost_1_64_0
     - cd $BOOST
     - "./bootstrap.sh"
-    - "./b2 headers program_options"
+    - "./b2 headers --with-program_options"
     - cd $TRAVIS_BUILD_DIR
 script:
 - cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
