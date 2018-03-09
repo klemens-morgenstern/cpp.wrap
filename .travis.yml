@@ -25,15 +25,15 @@ before_script:
     - export CXX=/usr/bin/g++-6
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
     - cd $HOME
-    - wget -O boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
-    - tar -xf boost_1_66_0.tar.gz > /dev/null
+    - wget -O boost_1_64_0.tar.gz https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz
+    - tar -xf boost_1_64_0.tar.gz > /dev/null
     - BOOST=$HOME/boost_1_66_0
     - cd $BOOST
     - "./bootstrap.sh"
     - "./b2 headers program_options"
     - cd $TRAVIS_BUILD_DIR
 script:
-- cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST -DBoost_ADDITIONAL_VERSIONS="1.66.0"  .
+- cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
 - cmake --build . -- -j4
 - ctest
 after_success:
