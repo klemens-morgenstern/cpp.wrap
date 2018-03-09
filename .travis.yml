@@ -22,37 +22,17 @@ addons:
 before_script:
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
     - cd $HOME
-    - wget -O boost_1_64_0.tar.gz https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz
-    - tar -xf boost_1_64_0.tar.gz > /dev/null
-    - BOOST=$HOME/boost_1_64_0
+    - wget -O boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
+    - tar -xf boost_1_66_0.tar.gz > /dev/null
+    - BOOST=$HOME/boost_1_66_0
     - cd $BOOST
     - "./bootstrap.sh"
-    - "./b2 headers"
+    - "./b2 headers program_options"
     - cd $TRAVIS_BUILD_DIR
-    - CPP_TEST=$HOME/cpp.test
-    - git init $CPP_TEST
-    - cd $CPP_TEST
-    - if [ $BRANCH_TO_TEST = "master" ]; then
-      CPP_BRANCH=master; 
-      else CPP_BRANCH=develop; fi
-    - git remote add --no-tags -t $CPP_BRANCH origin https://github.com/cpp-sc/cpp.test.git
-    - git fetch --depth=1
-    - git checkout $CPP_BRANCH
-    - git submodule update --init --merge
-    - git remote set-branches --add origin $CPP_BRANCH
-    - git pull --recurse-submodules
-    - git submodule update --init
-    - git checkout $CPP_BRANCH
-    - git submodule foreach "git reset --quiet --hard; git clean -fxd"
-    - git reset --hard; git clean -fxd
-    - git status
-    - echo "Removing cpp.wrap"
-    - rm -rf $CPP_TEST/wrap
-    - mv $TRAVIS_BUILD_DIR/../$PROJECT_TO_TEST $CPP_TEST/wrap
-    - cp user-config.travis.jam user-config.jam
-    - cd ./wrap/test
 script:
-- $BOOST/b2 release -sBOOST_ROOT=$BOOST define=CPP_TRAVISCI_BUILD toolset=gcc-6 linkflags="-ldl -pthread" -sBOOST_BUILD_PATH=. -j4 address-model=$ADDRESS_MODEL cxxflags=-fno-inline optimization=off testing.launcher=valgrind valgrind=on cxxflags=--coverage cflags=--coverage linkflags=--coverage 
+- cmake release -D ENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST
+- cmake --build . -- -j4
+- ctest
 after_success:
     # Copying Coveralls data to a separate folder
     - mkdir -p ./coverals

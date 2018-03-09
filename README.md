@@ -16,7 +16,3 @@ Master:         | [![Build Status](https://travis-ci.org/klemens-morgenstern/cpp
 
 ### License
 Distributed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-
-### Dependency
-
-This library requires boost 1.64. At the moment only the release candidate is available. Additionally it is part of the [cpp.test](https://github.com/klemens-morgenstern/cpp.test) tools. In order to build, using this repository is recommended.
