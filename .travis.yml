@@ -19,7 +19,10 @@ addons:
     - gcc-6
     - g++-6
     - cmake
+    - cmake-data
 before_script:
+    - export CC=/usr/bin/gcc-6
+    - export CXX=/usr/bin/g++-6
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
     - cd $HOME
     - wget -O boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
