@@ -37,7 +37,7 @@ In order for that too work, we need to generate an extra source file from the ge
 g++ -c foo.cpp -o foo.o
 g++ -c bar.cpp -o bar.o
 g++ -c wrap.cpp -o wrap.o
-cpp-wrap foo.o bar.o wrap.o --wrapper=wrap.opt --output=wrap_gen.cpp --indirect
+cppwrap foo.o bar.o wrap.o --wrapper=wrap.opt --output=wrap_gen.cpp --indirect
 g++ -c wrap_gen.cpp -o wrap_gen.o
 g++ foo.o bar.o wrap.o wrap_gen.o -o test @wrap.opt
 ./test

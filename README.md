@@ -11,7 +11,7 @@ Develop:        | [![Build Status](https://travis-ci.org/klemens-morgenstern/cpp
 Master:         | [![Build Status](https://travis-ci.org/klemens-morgenstern/cpp.wrap.svg?branch=master)](https://travis-ci.org/klemens-morgenstern/cpp.wrap)  | [![Coverage Status](https://coveralls.io/repos/github/klemens-morgenstern/cpp.wrap/badge.svg?branch=master)](https://coveralls.io/github/klemens-morgenstern/cpp.wrap?branch=master)   |
 [Open Issues](https://github.com/klemens-morgenstern/cpp.wrap/issues)
 
-[Latest developer documentation](http://klemens-morgenstern.github.io/wrap/)
+[Latest developer documentation](http://klemens-morgenstern.github.io/cpp.wrap/)
 
 
 ### License
