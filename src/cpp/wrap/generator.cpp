@@ -1,18 +1,11 @@
 /**
- * @file   mw/wrap/generator.cpp
+ * @file   cpp/wrap/generator.cpp
  * @date   20.03.2017
  * @author Klemens D. Morgenstern
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
- <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-            )
- </pre>
  */
-#include <mw/wrap/generator.hpp>
+#include <cpp/wrap/generator.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/join.hpp>
 
@@ -22,17 +15,17 @@
 #include <fmt/format.h>
 #include <boost/algorithm/string/trim.hpp>
 
-namespace mw {
+namespace cpp {
 namespace wrap {
 
 std::string generator::make()
 {
     include_std_except = false;
-    mw::wrap::outline::storage st_me;
+    cpp::wrap::outline::storage st_me;
     st_me.resize(st.size());
 
     auto itr = std::copy_if(st.cbegin(), st.cend(), st_me.begin(),
-                  [](const outline::entry & e){return e.mangled.find("_mw_wrap_") != std::string::npos;});
+                  [](const outline::entry & e){return e.mangled.find("_CPP_wrap_") != std::string::npos;});
 
     st_me.erase(itr, st_me.end());
 
@@ -41,24 +34,24 @@ std::string generator::make()
     for (auto & s : st_me)
     {
         //TODO: support msvc.
-        if (boost::starts_with(s.demangled, "_mw_wrap_"))
+        if (boost::starts_with(s.demangled, "_CPP_wrap_"))
         {
             //is fix
-            if (boost::starts_with(s.demangled, "_mw_wrap_fn_fix_"))
+            if (boost::starts_with(s.demangled, "_CPP_wrap_fn_fix_"))
                 value += make_fn_fix(s);
-            else if (boost::starts_with(s.demangled, "_mw_wrap_mem_fix_"))
+            else if (boost::starts_with(s.demangled, "_CPP_wrap_mem_fix_"))
                 value += make_mem_fix(s);
-            else if (boost::starts_with(s.demangled, "_mw_wrap_static_mem_fix_"))
+            else if (boost::starts_with(s.demangled, "_CPP_wrap_static_mem_fix_"))
                 value += make_static_mem_fix(s);
         }
-        else if (boost::starts_with(s.demangled, "mw::detail::connector_impl") && (s.demangled.find("::connect_impl") != std::string::npos))
+        else if (boost::starts_with(s.demangled, "cpp::detail::connector_impl") && (s.demangled.find("::connect_impl") != std::string::npos))
         {
             include_std_except = true;
-            if (s.demangled.find("_mw_wrap_fn_") != std::string::npos)
+            if (s.demangled.find("_CPP_wrap_fn_") != std::string::npos)
                 value += make_fn(s);
-            else if (s.demangled.find("_mw_wrap_mem_") != std::string::npos)
+            else if (s.demangled.find("_CPP_wrap_mem_") != std::string::npos)
                 value += make_mem(s);
-            else if (s.demangled.find("_mw_wrap_static_mem_") != std::string::npos)
+            else if (s.demangled.find("_CPP_wrap_static_mem_") != std::string::npos)
                 value += make_static_mem(s);
         }
     }
@@ -86,7 +79,7 @@ auto tag_type_assign = [](auto & ctx)
         };
 
 x3::rule<class tag_type, std::string> tag_type;
-auto tag_type_def = "mw::detail::tag" >> x3::raw[pointy_par][tag_type_assign] >> '*';
+auto tag_type_def = "cpp::detail::tag" >> x3::raw[pointy_par][tag_type_assign] >> '*';
 BOOST_SPIRIT_DEFINE(tag_type);
 
 auto raw_assign = [](auto & ctx)
@@ -115,7 +108,7 @@ std::string generator::make_fn_fix(const outline::entry & e)
     std::vector<std::string> params;
     std::string return_type;
     auto rule =
-            "_mw_wrap_fn_fix_" >> x3::int_[assign(scp_size)] >> "__mw__" >> ((*(x3::char_("_A-Za-z0-9") - "__mw__"))[push_back(scp_val)] % "__mw__")
+            "_CPP_wrap_fn_fix_" >> x3::int_[assign(scp_size)] >> "__CPP__" >> ((*(x3::char_("_A-Za-z0-9") - "__CPP__"))[push_back(scp_val)] % "__CPP__")
             >> '(' >> tag_type[assign(return_type)] >> *(',' >> type_name[push_back(params)]) >> ')' >> *x3::space >> x3::eoi;
 
     auto itr = e.demangled.begin();
@@ -208,7 +201,7 @@ std::string generator::make_mem_fix(const outline::entry & e)
     std::vector<std::string> params;
     std::string return_type;
     auto rule =
-            "_mw_wrap_mem_fix_" >> (*x3::char_("_A-Za-z0-9"))[assign(mem_name)]
+            "_CPP_wrap_mem_fix_" >> (*x3::char_("_A-Za-z0-9"))[assign(mem_name)]
              >> '(' >>
              class_name[assign(class_name_)]  >> -x3::lit(" const")[set(const_)] >> -x3::lit(" volatile")[set(volatile_)] >> "*,"  >>
                 *(type_name >> ',')[push_back(params)] >> *x3::space >>  tag_type[assign(return_type)] >> ')' >> *x3::space >> x3::eoi;
@@ -315,7 +308,7 @@ std::string generator::make_static_mem_fix(const outline::entry & e)
      std::vector<std::string> params;
      std::string return_type;
      auto rule =
-             "_mw_wrap_static_mem_fix_" >> (*x3::char_("_A-Za-z0-9"))[assign(mem_name)]
+             "_CPP_wrap_static_mem_fix_" >> (*x3::char_("_A-Za-z0-9"))[assign(mem_name)]
               >> '(' >>
               class_name[assign(class_name_)]  >> -x3::lit(" const") >> -x3::lit(" volatile") >> "*,"  >>
                  *(type_name >> ',')[push_back(params)] >> *x3::space >>  tag_type[assign(return_type)] >> ')' >> *x3::space >> x3::eoi;
@@ -423,7 +416,7 @@ std::string generator::make_fn (const outline::entry & e)
     int cmp_elems_i = 0;
     auto cmp_elems = [&cmp_elems_i](auto & ref){return [&ref, &cmp_elems_i](auto & ctx) {x3::_pass(ctx) = (x3::_attr(ctx) == ref.at(cmp_elems_i++));};};
 
-    auto rule = "mw::detail::connector_impl<" >> class_name[assign(return_type)]
+    auto rule = "cpp::detail::connector_impl<" >> class_name[assign(return_type)]
                 >> +x3::space >> '(' >> class_name[assign(class_type)] >> '*'  >> x3::lit(')')
                 >> '(' >> (type_name[push_back(params)] % (',' >> +x3::space)) >> x3::lit(')')
                 >> ',' >> +x3::space >> '&' >> class_name[assign(member_name)] >> '>'
@@ -442,8 +435,8 @@ std::string generator::make_fn (const outline::entry & e)
 
     class_type.erase(class_type.end()-2, class_type.end());
 
-    auto rl_nm = class_type >> x3::lit("::") >> "_mw_wrap_fn_" >> x3::int_[assign(scp_size)] >> "__mw__"
-                 >> *(!x3::int_ >> (*(x3::char_("_A-Za-z0-9") - "__mw__"))[push_back(scp_val)] >> "__mw__")
+    auto rl_nm = class_type >> x3::lit("::") >> "_CPP_wrap_fn_" >> x3::int_[assign(scp_size)] >> "__CPP__"
+                 >> *(!x3::int_ >> (*(x3::char_("_A-Za-z0-9") - "__CPP__"))[push_back(scp_val)] >> "__CPP__")
                  >> x3::int_[assign(line)];
 
     itr = member_name.cbegin();
@@ -457,7 +450,7 @@ std::string generator::make_fn (const outline::entry & e)
 
     const outline::entry & dis =
     [&]{
-        std::string dc = "mw::detail::connector_impl<";
+        std::string dc = "cpp::detail::connector_impl<";
         dc += return_type + " ";
         dc += "(" + class_type + "::*)";
         dc += "(" + boost::join(params, ", ") + ")";
@@ -569,7 +562,7 @@ extern "C" void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr);
 void _{Connect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 {{
    if ((_{Target}_p != nullptr) || (_{Target}_mem != nullptr))
-       throw std::runtime_error("mw.wrap Errornous connect");
+       throw std::runtime_error("cpp.wrap Errornous connect");
 
    _{Target}_p   = p;
    _{Target}_mem = mem_ptr;
@@ -577,7 +570,7 @@ void _{Connect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 {{
    if ((_{Target}_p != p) || (_{Target}_mem != mem_ptr))
-       throw std::runtime_error("mw.wrap Errornous disconnect");
+       throw std::runtime_error("cpp.wrap Errornous disconnect");
 
    _{Target}_p   = nullptr;
    _{Target}_mem = nullptr;
@@ -617,7 +610,7 @@ std::string generator::make_mem (const outline::entry & e)
     int cmp_elems_i = 0;
     auto cmp_elems = [&cmp_elems_i](auto & ref){return [&ref, &cmp_elems_i](auto & ctx) {x3::_pass(ctx) = (x3::_attr(ctx) == ref.at(cmp_elems_i++));};};
 
-    auto rule = "mw::detail::connector_impl<" >> class_name[assign(return_type)]
+    auto rule = "cpp::detail::connector_impl<" >> class_name[assign(return_type)]
                 >> +x3::space >> '(' >> class_name[assign(class_type)] >> '*'  >> x3::lit(')')
                 >> '('
                     >> class_name[assign(class_name_)]  >> -x3::lit(" const")[set(const_)] >> -x3::lit(" volatile")[set(volatile_)] >> "*"
@@ -643,8 +636,8 @@ std::string generator::make_mem (const outline::entry & e)
 
     class_type.erase(class_type.end()-2, class_type.end());
 
-    auto rl_nm = class_type >> x3::lit("::") >> "_mw_wrap_mem_"
-                 >> (*(x3::char_("_A-Za-z0-9") - "__mw__"))[assign(mem_name)] >> "__mw__"
+    auto rl_nm = class_type >> x3::lit("::") >> "_CPP_wrap_mem_"
+                 >> (*(x3::char_("_A-Za-z0-9") - "__CPP__"))[assign(mem_name)] >> "__CPP__"
                  >> x3::int_[assign(line)];
 
     itr = member_name.cbegin();
@@ -668,7 +661,7 @@ std::string generator::make_mem (const outline::entry & e)
             pm += ", " + boost::join(params, ", ");
         pm += ")";
 
-        std::string dc = "mw::detail::connector_impl<";
+        std::string dc = "cpp::detail::connector_impl<";
         dc += return_type + " ";
         dc += "(" + class_type + "::*)";
         dc += pm;
@@ -778,7 +771,7 @@ extern "C" void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr);
 void _{Connect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 {{
    if ((_{Target}_p != nullptr) || (_{Target}_mem != nullptr))
-       throw std::runtime_error("mw.wrap Errornous connect");
+       throw std::runtime_error("cpp.wrap Errornous connect");
 
    _{Target}_p   = p;
    _{Target}_mem = mem_ptr;
@@ -786,7 +779,7 @@ void _{Connect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 {{
    if ((_{Target}_p != p) || (_{Target}_mem != mem_ptr))
-       throw std::runtime_error("mw.wrap Errornous disconnect");
+       throw std::runtime_error("cpp.wrap Errornous disconnect");
 
    _{Target}_p   = nullptr;
    _{Target}_mem = nullptr;
@@ -825,7 +818,7 @@ std::string generator::make_static_mem (const outline::entry & e)
     int cmp_elems_i = 0;
     auto cmp_elems = [&cmp_elems_i](auto & ref){return [&ref, &cmp_elems_i](auto & ctx) {x3::_pass(ctx) = (x3::_attr(ctx) == ref.at(cmp_elems_i++));};};
 
-    auto rule = "mw::detail::connector_impl<" >> class_name[assign(return_type)]
+    auto rule = "cpp::detail::connector_impl<" >> class_name[assign(return_type)]
                 >> +x3::space >> '(' >> class_name[assign(class_type)] >> '*'  >> x3::lit(')')
                 >> '('
                     >> class_name[assign(class_name_)]  >> -x3::lit(" const")[set(const_)] >> -x3::lit(" volatile")[set(volatile_)] >> "*"
@@ -851,8 +844,8 @@ std::string generator::make_static_mem (const outline::entry & e)
 
     class_type.erase(class_type.end()-2, class_type.end());
 
-    auto rl_nm = class_type >> x3::lit("::") >> "_mw_wrap_static_mem_"
-                 >> (*(x3::char_("_A-Za-z0-9") - "__mw__"))[assign(mem_name)] >> "__mw__"
+    auto rl_nm = class_type >> x3::lit("::") >> "_CPP_wrap_static_mem_"
+                 >> (*(x3::char_("_A-Za-z0-9") - "__CPP__"))[assign(mem_name)] >> "__CPP__"
                  >> x3::int_[assign(line)];
 
     itr = member_name.cbegin();
@@ -876,7 +869,7 @@ std::string generator::make_static_mem (const outline::entry & e)
             pm += ", " + boost::join(params, ", ");
         pm += ")";
 
-        std::string dc = "mw::detail::connector_impl<";
+        std::string dc = "cpp::detail::connector_impl<";
         dc += return_type + " ";
         dc += "(" + class_type + "::*)";
         dc += pm;
@@ -982,7 +975,7 @@ extern "C" void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr);
 void _{Connect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 {{
    if ((_{Target}_p != nullptr) || (_{Target}_mem != nullptr))
-       throw std::runtime_error("mw.wrap Errornous connect");
+       throw std::runtime_error("cpp.wrap Errornous connect");
 
    _{Target}_p   = p;
    _{Target}_mem = mem_ptr;
@@ -990,7 +983,7 @@ void _{Connect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 {{
    if ((_{Target}_p != p) || (_{Target}_mem != mem_ptr))
-       throw std::runtime_error("mw.wrap Errornous disconnect");
+       throw std::runtime_error("cpp.wrap Errornous disconnect");
 
    _{Target}_p   = nullptr;
    _{Target}_mem = nullptr;
@@ -1008,4 +1001,4 @@ void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 }
 
 } /* namespace wrap */
-} /* namespace mw */
+} /* namespace cpp */

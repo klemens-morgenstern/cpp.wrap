@@ -26,13 +26,13 @@ if ! [ path.exists $(test-gen-path) ]
     alias test_gen.cpp : dummy.cpp ;
 }
 
-run ..//mw-wrap : --template=test_tpl.cpp --wrapper-out=wrapper.opt --output=test_gen.cpp --indirect : test_impl test_stub : : mw-wrap-run ;
+run ..//cpp-wrap : --template=test_tpl.cpp --wrapper-out=wrapper.opt --output=test_gen.cpp --indirect : test_impl test_stub : : cpp-wrap-run ;
 
-obj test_gen : test_gen.cpp : <dependency>mw-wrap-run ;
+obj test_gen : test_gen.cpp : <dependency>cpp-wrap-run ;
 
 
 
-exe no-stub :  test_impl test : <define>MW_NO_DYNAMIC_TEST ;
+exe no-stub :  test_impl test : <define>CPP_NO_DYNAMIC_TEST ;
 exe    stub  : test_stub test_impl test_gen test : <linkflags>" "@$(my-path)/wrapper.opt  ;
 exe dyn-test : test_stub test_impl test_gen test_dyn : <linkflags>" "@$(my-path)/wrapper.opt  ;
 

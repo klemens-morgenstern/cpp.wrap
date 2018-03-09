@@ -1,10 +1,10 @@
-[section:tool mw-wrap]
+[section:tool cpp-wrap]
 
 [teletype] 
 [table Parameter overview
     [[Name]       [Short] [Description] [Type] [Default Argument] ]
     [[`help`]     [`H`] [Print the help message] [['flag]] [`false`]]
-    [[`output`]   [`O`] [Output source file] [path] ["./mw-wrapper.cpp"]]
+    [[`output`]   [`O`] [Output source file] [path] ["./cpp-wrapper.cpp"]]
     [[`compiler`] [`C`] [Compiler to be used (clang, gcc)] [string] [['none]]]
     [[`outline`]  [`X`] [The mangled outline] [path] [['none]]]
     [[`dem-outline`]  [`Y`] [The demangled outline] [path] [['none]]]
@@ -17,24 +17,24 @@
     [[`indirect`] [`I`] [Flag indicating that the linker is called through the compiler, e.g. `g++`] [['flag]] [`false`]]
 ]
 
-[note `binary` can be passed as a positional argument, i.e. as the first argument without the `--binary`/`-B`. E.g. `mw-wrap my-binary.o`.]
+[note `binary` can be passed as a positional argument, i.e. as the first argument without the `--binary`/`-B`. E.g. `cpp-wrap my-binary.o`.]
 
 [section:outline Obtaining the outline]
 
-`mw-wrap` needs the mangled and the demandled outline. These can either be obtained prior to calling `mw-wrap` and then passed to the tool. For a binary `foo.o` this might
+`cpp-wrap` needs the mangled and the demandled outline. These can either be obtained prior to calling `cpp-wrap` and then passed to the tool. For a binary `foo.o` this might
 look like this:
 
 ```
 nm foo.o > foo.nm
 nm foo.o --demangle > foo.dem
-mw-wrap --dem-outline foo.dem --outline foo.nm
+cpp-wrap --dem-outline foo.dem --outline foo.nm
 ```
 
-Alternatively `mw-wrap` can call the tool directly, and the command can be set as parameter.
+Alternatively `cpp-wrap` can call the tool directly, and the command can be set as parameter.
 
 ```
-mw-wrap --nm nm --binary foo.o
-mw-wrap foo.o
+cpp-wrap --nm nm --binary foo.o
+cpp-wrap foo.o
 ```
 
 The second version is the short form.
@@ -53,8 +53,8 @@ The tool supports two ways to get additional parameters passed from a file. One 
 These options can be loaded in the following way.
 
 ```
-mw-wrap @response-file
-mw-wrap --response-file response-file
+cpp-wrap @response-file
+cpp-wrap --response-file response-file
 ```
 
 [note This feature is also provided by gcc and many of the linux tools. This is how the wrapper output options shall be used.]
@@ -69,7 +69,7 @@ dem-outline=foo.dem
 And this can be used like this.
 
 ```
-mw-wrap --config-file file.cfg
+cpp-wrap --config-file file.cfg
 ```
 
 

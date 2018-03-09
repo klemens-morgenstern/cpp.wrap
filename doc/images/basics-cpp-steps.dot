@@ -47,6 +47,6 @@ digraph G {
   bar_o  -> outline;
   wrap_o -> outline;
   
-  outline->wrap_gen_cpp[label="mw-wrap"] ;
+  outline->wrap_gen_cpp[label="cpp-wrap"] ;
 
 }

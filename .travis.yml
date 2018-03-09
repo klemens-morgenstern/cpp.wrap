@@ -18,6 +18,7 @@ addons:
     - python-yaml
     - gcc-6
     - g++-6
+    - cmake
 before_script:
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
     - cd $HOME
@@ -28,42 +29,42 @@ before_script:
     - "./bootstrap.sh"
     - "./b2 headers"
     - cd $TRAVIS_BUILD_DIR
-    - MW_TEST=$HOME/mw.test
-    - git init $MW_TEST
-    - cd $MW_TEST
+    - CPP_TEST=$HOME/cpp.test
+    - git init $CPP_TEST
+    - cd $CPP_TEST
     - if [ $BRANCH_TO_TEST = "master" ]; then
-      MW_BRANCH=master; 
-      else MW_BRANCH=develop; fi
-    - git remote add --no-tags -t $MW_BRANCH origin https://github.com/mw-sc/mw.test.git
+      CPP_BRANCH=master; 
+      else CPP_BRANCH=develop; fi
+    - git remote add --no-tags -t $CPP_BRANCH origin https://github.com/cpp-sc/cpp.test.git
     - git fetch --depth=1
-    - git checkout $MW_BRANCH
+    - git checkout $CPP_BRANCH
     - git submodule update --init --merge
-    - git remote set-branches --add origin $MW_BRANCH
+    - git remote set-branches --add origin $CPP_BRANCH
     - git pull --recurse-submodules
     - git submodule update --init
-    - git checkout $MW_BRANCH
+    - git checkout $CPP_BRANCH
     - git submodule foreach "git reset --quiet --hard; git clean -fxd"
     - git reset --hard; git clean -fxd
     - git status
-    - echo "Removing mw.wrap"
-    - rm -rf $MW_TEST/wrap
-    - mv $TRAVIS_BUILD_DIR/../$PROJECT_TO_TEST $MW_TEST/wrap
+    - echo "Removing cpp.wrap"
+    - rm -rf $CPP_TEST/wrap
+    - mv $TRAVIS_BUILD_DIR/../$PROJECT_TO_TEST $CPP_TEST/wrap
     - cp user-config.travis.jam user-config.jam
     - cd ./wrap/test
 script:
-- $BOOST/b2 release -sBOOST_ROOT=$BOOST define=MW_TRAVISCI_BUILD toolset=gcc-6 linkflags="-ldl -pthread" -sBOOST_BUILD_PATH=. -j4 address-model=$ADDRESS_MODEL cxxflags=-fno-inline optimization=off testing.launcher=valgrind valgrind=on cxxflags=--coverage cflags=--coverage linkflags=--coverage 
+- $BOOST/b2 release -sBOOST_ROOT=$BOOST define=CPP_TRAVISCI_BUILD toolset=gcc-6 linkflags="-ldl -pthread" -sBOOST_BUILD_PATH=. -j4 address-model=$ADDRESS_MODEL cxxflags=-fno-inline optimization=off testing.launcher=valgrind valgrind=on cxxflags=--coverage cflags=--coverage linkflags=--coverage 
 after_success:
     # Copying Coveralls data to a separate folder
     - mkdir -p ./coverals
-    - find ../../bin.mw/wrap -name *.gcda -exec cp "{}" ./coverals/ \;
-    - find ../../bin.mw/wrap -name *.gcno -exec cp "{}" ./coverals/ \;
+    - find ../../bin.cpp/wrap -name *.gcda -exec cp "{}" ./coverals/ \;
+    - find ../../bin.cpp/wrap -name *.gcno -exec cp "{}" ./coverals/ \;
 
     # Preparing Coveralls data by changind data format to a readable one
     - git clone https://github.com/linux-test-project/lcov.git lcov_dir
     - GCOV_VERSION="--gcov-tool gcov-6"
-    - LCOV="$MW_TEST/wrap/test/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
+    - LCOV="$CPP_TEST/wrap/test/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
     - $LCOV --directory ./coverals --base-directory ./ --capture --output-file ./coverals/coverage.info
-    - $LCOV --remove ./coverals/coverage.info "$MW_TEST/wrap/test/*" "*boost*" "/usr/*" "$MW_TEST/libs/*" "$MW_TEST/dbg-runner/*" -o ./coverals/coverage.info
+    - $LCOV --remove ./coverals/coverage.info "$CPP_TEST/wrap/test/*" "*boost*" "/usr/*" "$CPP_TEST/libs/*" "$CPP_TEST/dbg-runner/*" -o ./coverals/coverage.info
 
     # Sending data to Coveralls
     - gem install coveralls-lcov

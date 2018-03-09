@@ -1,10 +1,10 @@
-[def MW_WRAP_FN [link wrap.reference.header.MW_WRAP_FN MW_WRAP_FN]]
-[def MW_WRAP_FN_FIX [link wrap.reference.header.MW_WRAP_FN_FIX MW_WRAP_FN_FIX]]
-[def MW_WRAP_MEM [link wrap.reference.header.MW_WRAP_MEM MW_WRAP_MEM]]
-[def MW_WRAP_MEM_FIX [link wrap.reference.header.MW_WRAP_MEM_FIX MW_WRAP_MEM_FIX]]
-[def MW_WRAP_STATIC_MEM [link wrap.reference.header.MW_WRAP_STATIC_MEM MW_WRAP_STATIC_MEM]]
-[def MW_WRAP_STATIC_MEM_FIX [link wrap.reference.header.MW_WRAP_STATIC_MEM_FIX MW_WRAP_STATIC_MEM_FIX]]
-[def mw/wrap.hpp [link wrap.reference.header mw/wrap.hpp]]
+[def CPP_WRAP_FN [link wrap.reference.header.CPP_WRAP_FN CPP_WRAP_FN]]
+[def CPP_WRAP_FN_FIX [link wrap.reference.header.CPP_WRAP_FN_FIX CPP_WRAP_FN_FIX]]
+[def CPP_WRAP_MEM [link wrap.reference.header.CPP_WRAP_MEM CPP_WRAP_MEM]]
+[def CPP_WRAP_MEM_FIX [link wrap.reference.header.CPP_WRAP_MEM_FIX CPP_WRAP_MEM_FIX]]
+[def CPP_WRAP_STATIC_MEM [link wrap.reference.header.CPP_WRAP_STATIC_MEM CPP_WRAP_STATIC_MEM]]
+[def CPP_WRAP_STATIC_MEM_FIX [link wrap.reference.header.CPP_WRAP_STATIC_MEM_FIX CPP_WRAP_STATIC_MEM_FIX]]
+[def cpp/wrap.hpp [link wrap.reference.header cpp/wrap.hpp]]
 
 
 [section:extended In-Depth]
@@ -13,9 +13,9 @@
 
 The macros without the `_FIX` appendix are runtime-wraps. What this means is that they are members of a class and are constructed with it. The macros are:
 
-* MW_WRAP_FN
-* MW_WRAP_MEM
-* MW_WRAP_STATIC_MEM
+* CPP_WRAP_FN
+* CPP_WRAP_MEM
+* CPP_WRAP_STATIC_MEM
 
 So let's consider an example, with two functions:
 
@@ -30,7 +30,7 @@ int foo() {return 0;}
 The example given above will create stubs at runtime so that several can be used in the same binary. Additionally the original function can be used.
 This also means that a link to the original function will be created, so there's a guarantee that the symbol-to-wrap is actually defined.
 
-[warning Trying to construct several objects with MW_WRAP_FN will cause an exception to be thrown.]
+[warning Trying to construct several objects with CPP_WRAP_FN will cause an exception to be thrown.]
 
 [endsect]
 

@@ -1,31 +1,31 @@
-[def __MW_WRAP_FN__ [link wrap.reference.header.MW_WRAP_FN MW_WRAP_FN]]
-[def __MW_WRAP_FN_FIX__ [link wrap.reference.header.MW_WRAP_FN_FIX MW_WRAP_FN_FIX]]
-[def __MW_WRAP_MEM__ [link wrap.reference.header.MW_WRAP_MEM MW_WRAP_MEM]]
-[def __MW_WRAP_MEM_FIX__ [link wrap.reference.header.MW_WRAP_MEM_FIX MW_WRAP_MEM_FIX]]
-[def __MW_WRAP_STATIC_MEM__ [link wrap.reference.header.MW_WRAP_STATIC_MEM MW_WRAP_STATIC_MEM]]
-[def __MW_WRAP_STATIC_MEM_FIX__ [link wrap.reference.header.MW_WRAP_STATIC_MEM_FIX MW_WRAP_STATIC_MEM_FIX]]
+[def __CPP_WRAP_FN__ [link wrap.reference.header.CPP_WRAP_FN CPP_WRAP_FN]]
+[def __CPP_WRAP_FN_FIX__ [link wrap.reference.header.CPP_WRAP_FN_FIX CPP_WRAP_FN_FIX]]
+[def __CPP_WRAP_MEM__ [link wrap.reference.header.CPP_WRAP_MEM CPP_WRAP_MEM]]
+[def __CPP_WRAP_MEM_FIX__ [link wrap.reference.header.CPP_WRAP_MEM_FIX CPP_WRAP_MEM_FIX]]
+[def __CPP_WRAP_STATIC_MEM__ [link wrap.reference.header.CPP_WRAP_STATIC_MEM CPP_WRAP_STATIC_MEM]]
+[def __CPP_WRAP_STATIC_MEM_FIX__ [link wrap.reference.header.CPP_WRAP_STATIC_MEM_FIX CPP_WRAP_STATIC_MEM_FIX]]
 
-[def __MW_WRAP_FN_NO_ARGS__ [link wrap.reference.header.MW_WRAP_FN MW_WRAP_FN]]
-[def __MW_WRAP_FN_FIX_NO_ARGS__ [link wrap.reference.header.MW_WRAP_FN_FIX MW_WRAP_FN_FIX]]
-[def __MW_WRAP_MEM_NO_ARGS__ [link wrap.reference.header.MW_WRAP_MEM MW_WRAP_MEM]]
-[def __MW_WRAP_MEM_FIX_NO_ARGS__ [link wrap.reference.header.MW_WRAP_MEM_FIX MW_WRAP_MEM_FIX]]
-[def __MW_WRAP_STATIC_MEM_NO_ARGS__ [link wrap.reference.header.MW_WRAP_STATIC_MEM MW_WRAP_STATIC_MEM]]
-[def __MW_WRAP_STATIC_MEM_FIX_NO_ARGS__ [link wrap.reference.header.MW_WRAP_STATIC_MEM_FIX MW_WRAP_STATIC_MEM_FIX]]
+[def __CPP_WRAP_FN_NO_ARGS__ [link wrap.reference.header.CPP_WRAP_FN CPP_WRAP_FN]]
+[def __CPP_WRAP_FN_FIX_NO_ARGS__ [link wrap.reference.header.CPP_WRAP_FN_FIX CPP_WRAP_FN_FIX]]
+[def __CPP_WRAP_MEM_NO_ARGS__ [link wrap.reference.header.CPP_WRAP_MEM CPP_WRAP_MEM]]
+[def __CPP_WRAP_MEM_FIX_NO_ARGS__ [link wrap.reference.header.CPP_WRAP_MEM_FIX CPP_WRAP_MEM_FIX]]
+[def __CPP_WRAP_STATIC_MEM_NO_ARGS__ [link wrap.reference.header.CPP_WRAP_STATIC_MEM CPP_WRAP_STATIC_MEM]]
+[def __CPP_WRAP_STATIC_MEM_FIX_NO_ARGS__ [link wrap.reference.header.CPP_WRAP_STATIC_MEM_FIX CPP_WRAP_STATIC_MEM_FIX]]
 
 
-[section:header Header <mw/wrap.hpp>]
+[section:header Header <cpp/wrap.hpp>]
 
-[section:MW_WRAP_FN Macro MW_WRAP_FN]
+[section:CPP_WRAP_FN Macro CPP_WRAP_FN]
 
 [section:synopsis Synopsis]
 
 ```
-// In header: <mw/wrap.hpp>
-__MW_WRAP_FN__(Scope, Name, Return, Signature) 
-__MW_WRAP_FN__(Name, Return, Signature)
+// In header: <cpp/wrap.hpp>
+__CPP_WRAP_FN__(Scope, Name, Return, Signature) 
+__CPP_WRAP_FN__(Name, Return, Signature)
 
-__MW_WRAP_FN_NO_ARGS__(Scope, Name, Return) 
-__MW_WRAP_FN_NO_ARGS__(Name, Return)
+__CPP_WRAP_FN_NO_ARGS__(Scope, Name, Return) 
+__CPP_WRAP_FN_NO_ARGS__(Name, Return)
 ```
  
 [endsect]
@@ -37,10 +37,10 @@ The Macro taking three parameters is a convenience overload when the function is
 
 [note Must be member of a class.]
 [warning Construction will throw an `std::runtime_error` if the wrap is already set.]
-[note This also does work with static member functions. Though since they may be in a type alias or a template the usage of __MW_WRAP_STATIC_MEM__ is recommended.]
+[note This also does work with static member functions. Though since they may be in a type alias or a template the usage of __CPP_WRAP_STATIC_MEM__ is recommended.]
 
-For an empty argument list the __MW_WRAP_FN__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
-This might not work with some compilers, so that __MW_WRAP_FN_NO_ARGS__ can be used. 
+For an empty argument list the __CPP_WRAP_FN__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
+This might not work with some compilers, so that __CPP_WRAP_FN_NO_ARGS__ can be used. 
 
 [section:parameters Parameters] 
 
@@ -79,12 +79,12 @@ struct my_stubber
 {
     double out;
     int in;
-    __MW_WRAP_FN__((my_namespace, inner_namespace), function, double, (const int & val))
+    __CPP_WRAP_FN__((my_namespace, inner_namespace), function, double, (const int & val))
     {
         in = val;
         return out;
     }
-    __MW_WRAP_FN__(unscoped_fun, double, (int val))
+    __CPP_WRAP_FN__(unscoped_fun, double, (int val))
     {
         in = val;
         return out;
@@ -96,14 +96,14 @@ struct my_stubber
 [endsect]
 
 
-[section:MW_WRAP_MEM Macro MW_WRAP_MEM]
+[section:CPP_WRAP_MEM Macro CPP_WRAP_MEM]
 
 [section:synopsis Synopsis]
 
 ```
-// In header: <mw/wrap.hpp>
-__MW_WRAP_MEM__(Type, Name, Return, Signature)
-__MW_WRAP_MEM_NO_ARGS__(Type, Name, Return)
+// In header: <cpp/wrap.hpp>
+__CPP_WRAP_MEM__(Type, Name, Return, Signature)
+__CPP_WRAP_MEM_NO_ARGS__(Type, Name, Return)
 ```
 
 [endsect]
@@ -119,8 +119,8 @@ It can be used several times from different types, if they are not attempting to
 [note It can be used with templates due to utilization of `extern template`, as shown in the tutorial.]
 [important There is currently no support for handling ref-qualifiers for the member-functions.]
 
-For an empty argument list the __MW_WRAP_MEM__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
-This might not work with some compilers, so that __MW_WRAP_MEM_NO_ARGS__ can be used. 
+For an empty argument list the __CPP_WRAP_MEM__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
+This might not work with some compilers, so that __CPP_WRAP_MEM_NO_ARGS__ can be used. 
 
 [section:parameters Parameters]
 
@@ -161,13 +161,13 @@ struct my_stubber
     int out;
     int foo_value;
 
-    __MW_WRAP_MEM__((const my_namespace::foo), bar, int, ())
+    __CPP_WRAP_MEM__((const my_namespace::foo), bar, int, ())
     {
         this_->value = foo_value;
         return out;
     }
 
-    __MW_WRAP_MEM__(my_namespace::foo, bar, int, ())
+    __CPP_WRAP_MEM__(my_namespace::foo, bar, int, ())
     {
         foo_value = this_->value;
         return out;
@@ -180,15 +180,15 @@ struct my_stubber
 
 
 
-[section:MW_WRAP_STATIC_MEM Macro MW_WRAP_STATIC_MEM]
+[section:CPP_WRAP_STATIC_MEM Macro CPP_WRAP_STATIC_MEM]
 
 
 [section:synopsis Synopsis]
 
 ```
-// In header: <mw/wrap.hpp>
-__MW_WRAP_STATIC_MEM__(Type, Name, Return, Signature)
-__MW_WRAP_STATIC_MEM_NO_ARGS__(Type, Name, Return)
+// In header: <cpp/wrap.hpp>
+__CPP_WRAP_STATIC_MEM__(Type, Name, Return, Signature)
+__CPP_WRAP_STATIC_MEM_NO_ARGS__(Type, Name, Return)
 ```
 
 [endsect]
@@ -200,8 +200,8 @@ This macro can be used to declare a run-time wrap for a static member-functions.
 [note The type must be visible at the point of declaration of the wrap function.]
 [note It can be used with templates due to utilization of `extern template`, as shown in the tutorial.]
 
-For an empty argument list the __MW_WRAP_STATIC_MEM__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
-This might not work with some compilers, so that __MW_WRAP_STATIC_MEM_NO_ARGS__ can be used. 
+For an empty argument list the __CPP_WRAP_STATIC_MEM__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
+This might not work with some compilers, so that __CPP_WRAP_STATIC_MEM_NO_ARGS__ can be used. 
 
 [section:parameters Parameters]
 
@@ -237,7 +237,7 @@ we can declare a wrap like this
 struct my_stubber
 {
     int out;
-    __MW_WRAP_STATIC_MEM__(my_namespace::foo, static_bar, int, ())
+    __CPP_WRAP_STATIC_MEM__(my_namespace::foo, static_bar, int, ())
     {
         return out;
     }
@@ -248,18 +248,18 @@ struct my_stubber
 [endsect]
 
 
-[section:MW_WRAP_FN_FIX Macro MW_WRAP_FN_FIX]
+[section:CPP_WRAP_FN_FIX Macro CPP_WRAP_FN_FIX]
 
 
 [section:synopsis Synopsis]
 
 ```
-// In header: <mw/wrap.hpp>
-__MW_WRAP_FN_FIX__(Scope, Name, Return, Signature)
-__MW_WRAP_FN_FIX__(Name, Return, Signature)
+// In header: <cpp/wrap.hpp>
+__CPP_WRAP_FN_FIX__(Scope, Name, Return, Signature)
+__CPP_WRAP_FN_FIX__(Name, Return, Signature)
 
-__MW_WRAP_FN_FIX_NO_ARGS__(Scope, Name, Return)
-__MW_WRAP_FN_FIX_NO_ARGS__(Name, Return)
+__CPP_WRAP_FN_FIX_NO_ARGS__(Scope, Name, Return)
+__CPP_WRAP_FN_FIX_NO_ARGS__(Name, Return)
 ```
 
 [endsect]
@@ -271,10 +271,10 @@ The Macro taking three parameters is a convenience overload when the function is
 
 [note Must be member of a class.]
 [warning Construction will throw an `std::runtime_error` if the wrap is already set.]
-[note This also does work with static member functions. Though since they may be in a type alias or a template the usage of MW_WRAP_STATIC_MEM_FIX is recommended.]
+[note This also does work with static member functions. Though since they may be in a type alias or a template the usage of CPP_WRAP_STATIC_MEM_FIX is recommended.]
 
-For an empty argument list the __MW_WRAP_FN_FIX__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
-This might not work with some compilers, so that __MW_WRAP_FN_FIX_NO_ARGS__ can be used. 
+For an empty argument list the __CPP_WRAP_FN_FIX__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
+This might not work with some compilers, so that __CPP_WRAP_FN_FIX_NO_ARGS__ can be used. 
 
 [section:parameters Parameters]
 
@@ -309,12 +309,12 @@ namespace my_namespace
 we can declare a wrap like this
 
 ```
-__MW_WRAP_FN_FIX__((my_namespace, inner_namespace), function, double, (const int & val))
+__CPP_WRAP_FN_FIX__((my_namespace, inner_namespace), function, double, (const int & val))
 {
     return val;
 }
 
-__MW_WRAP_FN_FIX__(unscoped_fun, double, (const int & val))
+__CPP_WRAP_FN_FIX__(unscoped_fun, double, (const int & val))
 {
     return val;
 }
@@ -323,15 +323,15 @@ __MW_WRAP_FN_FIX__(unscoped_fun, double, (const int & val))
 [endsect]
 [endsect]
 
-[section:MW_WRAP_MEM_FIX Macro MW_WRAP_MEM_FIX]
+[section:CPP_WRAP_MEM_FIX Macro CPP_WRAP_MEM_FIX]
 
 
 [section:synopsis Synopsis]
 
 ```
-// In header: <mw/wrap.hpp>
-__MW_WRAP_MEM_FIX__(Type, Name, Return, Signature)
-__MW_WRAP_MEM_FIX_NO_ARGS__(Type, Name, Return)
+// In header: <cpp/wrap.hpp>
+__CPP_WRAP_MEM_FIX__(Type, Name, Return, Signature)
+__CPP_WRAP_MEM_FIX_NO_ARGS__(Type, Name, Return)
 ```
 
 [endsect]
@@ -344,8 +344,8 @@ This macro can be used to declare a compile-time constant wrap for a member-func
 [note It can be used with templates due to utilization of `extern template`, as shown in the tutorial.]
 [important There is currently no support for handling ref-qualifiers for the member-functions.]
 
-For an empty argument list the __MW_WRAP_MEM_FIX__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
-This might not work with some compilers, so that __MW_WRAP_MEM_FIX_NO_ARGS__ can be used. 
+For an empty argument list the __CPP_WRAP_MEM_FIX__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
+This might not work with some compilers, so that __CPP_WRAP_MEM_FIX_NO_ARGS__ can be used. 
 
 [section:parameters Parameters]
 
@@ -380,12 +380,12 @@ namespace my_namespace
 we can declare a wrap like this
 
 ```
-__MW_WRAP_MEM_FIX__((const my_namespace::foo), bar, int, ())
+__CPP_WRAP_MEM_FIX__((const my_namespace::foo), bar, int, ())
 {
     return this_->value;
 }
 
-__MW_WRAP_MEM_FIX__(my_namespace::foo, bar, int, ())
+__CPP_WRAP_MEM_FIX__(my_namespace::foo, bar, int, ())
 {
     this_->other_val = 12;
     return this->other_val;
@@ -397,15 +397,15 @@ __MW_WRAP_MEM_FIX__(my_namespace::foo, bar, int, ())
 
 
 
-[section:MW_WRAP_STATIC_MEM_FIX Macro MW_WRAP_STATIC_MEM_FIX]
+[section:CPP_WRAP_STATIC_MEM_FIX Macro CPP_WRAP_STATIC_MEM_FIX]
 
 
 [section:synopsis Synopsis]
 
 ```
-// In header: <mw/wrap.hpp>
-__MW_WRAP_STATIC_MEM_FIX__(Type, Name, Return, Signature)
-__MW_WRAP_STATIC_MEM_FIX_NO_ARGS__(Type, Name, Return)
+// In header: <cpp/wrap.hpp>
+__CPP_WRAP_STATIC_MEM_FIX__(Type, Name, Return, Signature)
+__CPP_WRAP_STATIC_MEM_FIX_NO_ARGS__(Type, Name, Return)
 ```
 
 [endsect]
@@ -417,8 +417,8 @@ This macro can be used to declare a run-time wrap for a member-function.  It can
 [note The type must be visible at the point of declaration of the wrap function.]
 [note It can be used with templates due to utilization of `extern template`, as shown in the tutorial.]
 
-For an empty argument list the __MW_WRAP_STATIC_MEM_FIX__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
-This might not work with some compilers, so that __MW_WRAP_STATIC_MEM_FIX_NO_ARGS__ can be used. 
+For an empty argument list the __CPP_WRAP_STATIC_MEM_FIX__ macro will use the [@https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html trailing macro extension] in gcc. 
+This might not work with some compilers, so that __CPP_WRAP_STATIC_MEM_FIX_NO_ARGS__ can be used. 
 
 
 [section:parameters Parameters]
@@ -452,7 +452,7 @@ namespace my_namespace
 we can declare a wrap like this
 
 ```
-__MW_WRAP_STATIC_MEM_FIX__(my_namespace::foo, static_bar, int, ())
+__CPP_WRAP_STATIC_MEM_FIX__(my_namespace::foo, static_bar, int, ())
 {
     return 42;
 }

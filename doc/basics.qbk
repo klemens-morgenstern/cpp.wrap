@@ -75,26 +75,26 @@ void bar(int i) { }
 
 Our stub is declared utilizing our 
 
-[def MW_WRAP_FN_FIX [link wrap.reference.header.MW_WRAP_FN_FIX MW_WRAP_FN_FIX]]
-[def mw/wrap.hpp [link wrap.reference.header mw/wrap.hpp]]
+[def CPP_WRAP_FN_FIX [link wrap.reference.header.CPP_WRAP_FN_FIX CPP_WRAP_FN_FIX]]
+[def cpp/wrap.hpp [link wrap.reference.header cpp/wrap.hpp]]
 
 ```
 //wrap.cpp
-#include <mw/wrap.hpp>
+#include <cpp/wrap.hpp>
 #include <iostream>
 
-MW_WRAP_FN_FIX(bar, void, (int val))
+CPP_WRAP_FN_FIX(bar, void, (int val))
 {
 	std::cout << "Hello world " << val << std::endl;
 };
 ```
 
-Now the build process will look like this[footnote Please note that you can let mw-wrap call `nm` as well.]
+Now the build process will look like this[footnote Please note that you can let cpp-wrap call `nm` as well.]
 
 [$images/basics-cpp-steps.svg]
 
 
-[note The header uses `__mw__` as a seperator, which means that this byte sequence must not be part of your identifiers.]
+[note The header uses `__CPP__` as a seperator, which means that this byte sequence must not be part of your identifiers.]
 
 [endsect]
 

@@ -4,20 +4,13 @@
  * @author Klemens D. Morgenstern
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-  <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-               )
- </pre>
  */
 
 //[template_stub
 //template_stub.cpp
 #include <vector>
 #include <cassert>
-#include <mw/wrap.hpp>
+#include <cpp/wrap.hpp>
 
 namespace std
 {
@@ -28,11 +21,11 @@ struct stubber
 {
     std::size_t size_out;
     int push_back_in;
-    MW_WRAP_MEM(const std::vector<int>, size, std::size_t, ()) /*<Declaring it const is applied to the method qualifier>*/
+    CPP_WRAP_MEM(const std::vector<int>, size, std::size_t, ()) /*<Declaring it const is applied to the method qualifier>*/
     {
         return size_out;
     }
-    MW_WRAP_MEM(std::vector<int>, push_back, void, (int&& in)) /*<only stub move push_back>*/
+    CPP_WRAP_MEM(std::vector<int>, push_back, void, (int&& in)) /*<only stub move push_back>*/
     {
         size_out = in;
     }

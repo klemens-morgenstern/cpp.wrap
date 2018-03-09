@@ -1,26 +1,19 @@
 /**
- * @file   mw/test/outline/gcc.hpp
+ * @file   cpp/test/outline/gcc.hpp
  * @date   18.01.2016
  * @author Klemens
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
  *
  *
- <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-                )
- </pre>
  */
 
-#ifndef MW_TEST_OUTLINE_GCC_HPP_
-#define MW_TEST_OUTLINE_GCC_HPP_
+#ifndef CPP_TEST_OUTLINE_GCC_HPP_
+#define CPP_TEST_OUTLINE_GCC_HPP_
 
-#include <mw/wrap/outline.hpp>
+#include <cpp/wrap/outline.hpp>
 
-namespace mw
+namespace cpp
 {
 namespace wrap
 {
@@ -40,4 +33,4 @@ storage parse_gcc(const std::string & file, std::istream & mangled, std::istream
 
 
 
-#endif /* MW_TEST_OUTLINE_GCC_HPP_ */
+#endif /* CPP_TEST_OUTLINE_GCC_HPP_ */

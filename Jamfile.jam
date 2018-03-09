@@ -9,9 +9,9 @@ project wrap :
 	<use>/boost//headers
 	;
 	
-exe mw-wrap : wrapper_main.cpp 
-	mw/wrap/outline/gcc.cpp 
-	mw/wrap/generator.cpp
+exe cpp-wrap : wrapper_main.cpp
+	cpp/wrap/outline/gcc.cpp
+	cpp/wrap/generator.cpp
     /boost//system
     /boost//program_options
     /boost//filesystem
@@ -20,4 +20,4 @@ exe mw-wrap : wrapper_main.cpp
     <target-os>linux:<linkflags>"-Wl,-rpath=."
     ;
     
-alias headers : ../include/mw/wrap.hpp ;
+alias headers : ../include/cpp/wrap.hpp ;

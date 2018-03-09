@@ -24,8 +24,8 @@ void bar(int i) { }
 Now for our test we want to redirect the call of `bar` from `foo` during link-time. This can advantageous, 
 because the produced binary code is the same, while only the sections and labels are changed.
 
-[def MW_WRAP_FN [link wrap.reference.header.MW_WRAP_FN MW_WRAP_FN]]
-[def mw/wrap.hpp [link wrap.reference.header mw/wrap.hpp]]
+[def CPP_WRAP_FN [link wrap.reference.header.CPP_WRAP_FN CPP_WRAP_FN]]
+[def cpp/wrap.hpp [link wrap.reference.header cpp/wrap.hpp]]
 
 [import ../example/intro.cpp]
 [intro]
@@ -37,7 +37,7 @@ In order for that too work, we need to generate an extra source file from the ge
 g++ -c foo.cpp -o foo.o
 g++ -c bar.cpp -o bar.o
 g++ -c wrap.cpp -o wrap.o
-mw-wrap foo.o bar.o wrap.o --wrapper=wrap.opt --output=wrap_gen.cpp --indirect
+cpp-wrap foo.o bar.o wrap.o --wrapper=wrap.opt --output=wrap_gen.cpp --indirect
 g++ -c wrap_gen.cpp -o wrap_gen.o
 g++ foo.o bar.o wrap.o wrap_gen.o -o test @wrap.opt
 ./test
@@ -46,7 +46,7 @@ g++ foo.o bar.o wrap.o wrap_gen.o -o test @wrap.opt
 The file `wrap.opt` contains the options for the wrap (`-Wl,--wrap=_ZN3barEKi`) and is passed via respond-file to the linker. The `--indirect` option denotes that we want
 to use `g++` and not `ld` directly, so the tool prepends `-Wl,`.
 
-[note For support or feature requests, feel free to write us an [@mailto:info@mw-sc.de E-Mail]]
+[note For support or feature requests, feel free to write us an [@mailto:info@cpp-sc.de E-Mail]]
 
 [important This tool and it's header require [@www.boost.org boost] to build.]
 

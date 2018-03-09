@@ -1,26 +1,19 @@
 /**
- * @file   mw/test/outline/gcc.hpp
+ * @file   cpp/test/outline/gcc.hpp
  * @date   18.01.2016
  * @author Klemens
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
  *
  *
- <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-                )
- </pre>
  */
 
 
 #include <boost/spirit/home/x3.hpp>
-#include <mw/wrap/outline/gcc.hpp>
+#include <cpp/wrap/outline/gcc.hpp>
 #include <iostream>
 
-namespace mw
+namespace cpp
 {
 namespace wrap
 {

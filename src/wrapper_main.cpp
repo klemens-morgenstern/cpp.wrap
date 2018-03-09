@@ -5,13 +5,6 @@
  * @brief Main function of the wrapper tool
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
- <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-            )
- </pre>
  */
 
 #include <iostream>
@@ -30,8 +23,8 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <mw/wrap/generator.hpp>
-#include <mw/wrap/outline/gcc.hpp>
+#include <cpp/wrap/generator.hpp>
+#include <cpp/wrap/outline/gcc.hpp>
 
 int main(int argc, char **argv)
 {
@@ -64,7 +57,7 @@ int main(int argc, char **argv)
     po::options_description desc("Possible options");
     desc.add_options()
             ("help,H", "produce help message")
-            ("output,o",        po::value<fs::path>(&output)->default_value("./mw-wrapper.cpp"),       "output file")
+            ("output,o",        po::value<fs::path>(&output)->default_value("./cpp-wrapper.cpp"),       "output file")
             ("compiler,C",      po::value<string>  (&comp),         "compiler [gcc, clang]")
             ("outline,X",       po::value<fs::path>(&mangled),      "outline")
             ("dem-outline,Y",   po::value<fs::path>(&demangled),    "demangled outline")
@@ -136,7 +129,7 @@ int main(int argc, char **argv)
        return 0;
     }
 
-    mw::wrap::outline::storage st;
+    cpp::wrap::outline::storage st;
     if ((comp == "gcc") || (comp == "clang") || comp.empty())
     {
         //load the files
@@ -144,7 +137,7 @@ int main(int argc, char **argv)
         {
             fs::ifstream ms{  mangled};
             fs::ifstream ds{demangled};
-            st = mw::wrap::outline::parse_gcc(mangled.string(), ms, ds);
+            st = cpp::wrap::outline::parse_gcc(mangled.string(), ms, ds);
         }
         for (auto & b : binary)
         {
@@ -159,7 +152,7 @@ int main(int argc, char **argv)
 
             boost::process::spawn(nm_cmd_, b, "--no-demangle", boost::process::std_out > ms);
             boost::process::spawn(nm_cmd_, b,    "--demangle", boost::process::std_out > ds);
-            auto st_in = mw::wrap::outline::parse_gcc(b, ms, ds);
+            auto st_in = cpp::wrap::outline::parse_gcc(b, ms, ds);
 
             st.insert(st.end(), std::make_move_iterator(st_in.begin()), std::make_move_iterator(st_in.end()));
         }
@@ -176,7 +169,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    mw::wrap::generator gen{st, indirect_call};
+    cpp::wrap::generator gen{st, indirect_call};
 
     fs::ofstream out{output};
 
