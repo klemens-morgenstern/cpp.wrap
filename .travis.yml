@@ -33,8 +33,9 @@ before_script:
     - "./b2 headers program_options"
     - cd $TRAVIS_BUILD_DIR
 script:
-- cmake3 -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
-- cmake3 --build . -- -j4
+- cmake --version
+- cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
+- cmake --build . -- -j4
 - ctest
 after_success:
     # Copying Coveralls data to a separate folder
