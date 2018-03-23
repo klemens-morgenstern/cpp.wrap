@@ -17,13 +17,15 @@ add_library(test_impl   OBJECT test_impl.cpp)
 
 generate_wrapped_cpp(test_gen.cpp test_impl test_stub test_static TEMPLATE test_tpl.cpp WRAPPER_OPT wrapper.opt INDIRECT)
 
+enable_testing()
+
 add_executable(no-stub dummy.cpp test_impl test_static)
 target_compile_definitions(no-stub PRIVATE -DCPP_NO_DYNAMIC_TEST)
-add_test(no-stub no-stub)
+add_test(no-stub no-stub --run_test=unstubbed)
 
 add_executable(stub test_gen.cpp test_stub test_impl test_static test_gen.cpp)
 set_target_properties(stub PROPERTIES LINK_FLAGS @wrapper.opt)
-add_test(stub stub)
+add_test(stub stub --run_test=stubbed)
 
 add_executable(dyn-test test_gen.cpp test_stub test_impl test_gen.cpp test_dyn)
 set_target_properties(dyn-test PROPERTIES LINK_FLAGS @wrapper.opt)
