@@ -2,9 +2,9 @@ project(cpp.wrap.test)
 
 if(CMAKE_COMPILER_IS_GNUCC)
     option(ENABLE_COVERAGE "Enable Coverage Reporting in GCC" FALSE)
-
     if(ENABLE_COVERAGE)
-        add_definitions(--coverage -O0)
+        add_definitions(--coverage)
+        link_libraries(--coverage)
         set(LINKER_FLAGS "${LINKER_FLAGS} --coverage")
     endif()
 endif()

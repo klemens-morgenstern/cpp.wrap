@@ -13,6 +13,5 @@ Master:         | [![Build Status](https://travis-ci.org/klemens-morgenstern/cpp
 
 [Latest developer documentation](http://klemens-morgenstern.github.io/cpp.wrap/)
 
-
 ### License
 Distributed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
