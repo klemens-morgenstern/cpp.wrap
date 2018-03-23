@@ -4,13 +4,6 @@
  * @author Klemens D. Morgenstern
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-  <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-               )
- </pre>
  */
 
 int foo();
@@ -18,11 +11,11 @@ int foo();
 //[multiple_stubs
 //multiple_stubs.cpp
 #include <cassert>
-#include <mw/wrap.hpp>
+#include <cpp/wrap.hpp>
 
 struct stubber1
 {
-    MW_WRAP_FN(foo, int, ())
+    CPP_WRAP_FN(foo, int, ())
     {
         return 42;
     }
@@ -30,7 +23,7 @@ struct stubber1
 
 struct stubber2
 {
-    MW_WRAP_FN(foo, int, ())
+    CPP_WRAP_FN(foo, int, ())
     {
         return -1;
     }

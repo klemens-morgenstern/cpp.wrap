@@ -1,24 +1,17 @@
 /**
- * @file   mw/wrap/generator.hpp
+ * @file   cpp/wrap/generator.hpp
  * @date   20.03.2017
  * @author Klemens D. Morgenstern
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
- <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-             )
- </pre>
  */
-#ifndef MW_WRAP_GENERATOR_HPP_
-#define MW_WRAP_GENERATOR_HPP_
+#ifndef CPP_WRAP_GENERATOR_HPP_
+#define CPP_WRAP_GENERATOR_HPP_
 
-#include <mw/wrap/outline.hpp>
+#include <cpp/wrap/outline.hpp>
 #include <set>
 
-namespace mw {
+namespace cpp {
 namespace wrap {
 
 struct generator
@@ -54,6 +47,6 @@ struct generator
 };
 
 } /* namespace wrap */
-} /* namespace mw */
+} /* namespace cpp */
 
-#endif /* INCLUDE_MW_WRAP_GENERATOR_HPP_ */
+#endif /* INCLUDE_CPP_WRAP_GENERATOR_HPP_ */

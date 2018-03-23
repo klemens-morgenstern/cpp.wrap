@@ -1,7 +1,6 @@
 env:
   global:
   - BRANCH_TO_TEST=$TRAVIS_BRANCH
-  - secure: "wOklWejh6Y7d9R5PulYFCo9lNW3O10yKh7SKQ+euKHmqwryJzz858Nt7UCNO8W317/XnS1uP6r4QfGsE2zZRMQu0qYL+icg6VOxxMwcW6+lCcBbmaBCkiLdhVDmcn0dmpj0GbbMOCNtETRH8M+Fu6A40HnJv9Akkwc4azxY7dMDfi/+SWw7+p3s7d2NvuTj3L784AbFW8iQWl3pYdOiGO6J97rzxAzo2lpiIMJ+18e2sfAxb0Lodvr0qpALbtee0n8t3AjjtFNPwOPAENl7PPuycKNrTvqqgBxFodX8WMfz/eUxnLweq7pj7cG1qqKQoJDkXO9duf5aMBq3jV7TzfHPxh9VqPxHI8I6ak+KQotEfkafKYwLJYa8rj8Z69ysacIzhdxEZezQXOg1ZW8BJhnu++maatiPlfyaoYntLbjIlm/uuqzMs3K/HmxMmC2amy/DVx73PSRsyKSYvsqdgkiB58xHJkpgsRx50AUEfwbW93DSiBxV8tBcDjPJ+/RmxrwyGkYpoMRw9lV2ypmEyjsFrarv+zKDzReupe+FYRxhraM3GdNaCl46PSdGkceZcVZikiqZ44JwWlpr2TVUeeW90cVHAub4IPuwHsnwsV5xJ35/9WK6VtTyK4K4vt9Fef63Qxd0eajCy2OllRqYRwxW5lJZkNbYQVNYm7hE6ul4="
   matrix:
   #- ADDRESS_MODEL=32
   - ADDRESS_MODEL=64
@@ -19,10 +18,11 @@ addons:
     - python-yaml
     - gcc-6
     - g++-6
-    - xsltproc
-    - docbook-xsl
-    - doxygen
+    - cmake3
+    - cmake3-data
 before_script:
+    - export CC=/usr/bin/gcc-6
+    - export CXX=/usr/bin/g++-6
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
     - cd $HOME
     - wget -O boost_1_64_0.tar.gz https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz
@@ -30,57 +30,26 @@ before_script:
     - BOOST=$HOME/boost_1_64_0
     - cd $BOOST
     - "./bootstrap.sh"
-    - "./b2 headers"
+    - "./b2 --with-program_options --with-filesystem --with-system"
     - cd $TRAVIS_BUILD_DIR
-    - MW_TEST=$HOME/mw.test
-    - git init $MW_TEST
-    - cd $MW_TEST
-    - if [ $BRANCH_TO_TEST = "master" ]; then
-      MW_BRANCH=master; 
-      else MW_BRANCH=develop; fi
-    - git remote add --no-tags -t $MW_BRANCH origin https://github.com/mw-sc/mw.test.git
-    - git fetch --depth=1
-    - git checkout $MW_BRANCH
-    - git submodule update --init --merge
-    - git remote set-branches --add origin $MW_BRANCH
-    - git pull --recurse-submodules
-    - git submodule update --init
-    - git checkout $MW_BRANCH
-    - git submodule foreach "git reset --quiet --hard; git clean -fxd"
-    - git reset --hard; git clean -fxd
-    - git status
-    - echo "Removing mw.wrap"
-    - rm -rf $MW_TEST/wrap
-    - mv $TRAVIS_BUILD_DIR/../$PROJECT_TO_TEST $MW_TEST/wrap
-    - cp user-config.travis.jam user-config.jam
-    - cd ./wrap/test
 script:
-- $BOOST/b2 release -sBOOST_ROOT=$BOOST define=MW_TRAVISCI_BUILD toolset=gcc-6 linkflags="-ldl -pthread" -sBOOST_BUILD_PATH=. -j4 address-model=$ADDRESS_MODEL cxxflags=-fno-inline optimization=off testing.launcher=valgrind valgrind=on cxxflags=--coverage cflags=--coverage linkflags=--coverage 
+- cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
+- cmake --build . -- -j4
+- cd test && ctest .
 after_success:
     # Copying Coveralls data to a separate folder
     - mkdir -p ./coverals
-    - find ../../bin.mw/wrap -name *.gcda -exec cp "{}" ./coverals/ \;
-    - find ../../bin.mw/wrap -name *.gcno -exec cp "{}" ./coverals/ \;
+    - find . -name *.gcda -exec cp "{}" ./coverals/ \;
+    - find . -name *.gcno -exec cp "{}" ./coverals/ \;
 
     # Preparing Coveralls data by changind data format to a readable one
     - git clone https://github.com/linux-test-project/lcov.git lcov_dir
     - GCOV_VERSION="--gcov-tool gcov-6"
-    - LCOV="$MW_TEST/wrap/test/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
+    - LCOV="$TRAVIS_BUILD_DIR/test/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
     - $LCOV --directory ./coverals --base-directory ./ --capture --output-file ./coverals/coverage.info
-    - $LCOV --remove ./coverals/coverage.info "$MW_TEST/wrap/test/*" "*boost*" "/usr/*" "$MW_TEST/libs/*" "$MW_TEST/dbg-runner/*" -o ./coverals/coverage.info
+    - $LCOV --remove ./coverals/coverage.info "*boost*" "/usr/*" -o ./coverals/coverage.info
 
     # Sending data to Coveralls
     - gem install coveralls-lcov
     # https://github.com/okkez/coveralls-lcov/issues/2
     - coveralls-lcov  --source-encoding=ISO-8859-1 ./coverals/coverage.info
-    - if [ $BRANCH_TO_TEST = "develop" ]; then 
-         cd ../doc; $BOOST/b2 -j4 -sBOOST_ROOT=$BOOST linkflags="-ldl -pthread" -sBOOST_BUILD_PATH=.;
-         git clone https://$GH_TOKEN@github.com/mw-sc/mw-sc.github.io.git -b master $HOME/pages > /dev/null 2>&1 ;
-         cd html; cp -r * $HOME/pages/wrap;
-         cd $HOME/pages;
-         git config user.email "travis@travis-ci.og";
-         git config user.name "Travis";
-         git commit -am "Updated wrap documentation"; 
-         git remote add origin-pages https://${GH_TOKEN}@github.com/mw-sc/mw-sc.github.io.git > /dev/null 2>&1;
-         git push --quiet --set-upstream origin-pages master;
-         fi 

@@ -5,15 +5,15 @@
  *      Author: Klemens
  */
 
-#ifndef MW_TEST_OUTLINE_HPP_
-#define MW_TEST_OUTLINE_HPP_
+#ifndef CPP_TEST_OUTLINE_HPP_
+#define CPP_TEST_OUTLINE_HPP_
 
 #include <cstdint>
 #include <vector>
 #include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
 
-namespace mw
+namespace cpp
 {
 namespace wrap
 {
@@ -40,4 +40,4 @@ using storage = std::vector<entry>;
 
 }}}
 
-#endif /* MW_TEST_OUTLINE_HPP_ */
+#endif /* CPP_TEST_OUTLINE_HPP_ */

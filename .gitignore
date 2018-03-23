@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+/test/test_gen.cpp
+/test/wrapper.opt
+/doc/html
+/cmake-build-debug

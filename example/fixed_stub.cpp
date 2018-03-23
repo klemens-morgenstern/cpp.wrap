@@ -4,13 +4,6 @@
  * @author Klemens D. Morgenstern
  *
  * Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-  <pre>
-    /  /|  (  )   |  |  /
-   /| / |   \/    | /| /
-  / |/  |   /\    |/ |/
- /  /   |  (  \   /  |
-               )
- </pre>
  */
 
 int foo();
@@ -18,9 +11,9 @@ int foo();
 //[fixed_stub
 //fixed_stub.cpp
 #include <cassert>
-#include <mw/wrap.hpp>
+#include <cpp/wrap.hpp>
 
-MW_WRAP_FN_FIX(foo, int, ())
+CPP_WRAP_FN_FIX(foo, int, ())
 {
     return 42;
 }
