@@ -35,7 +35,7 @@ before_script:
 script:
 - cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
 - cmake --build . -- -j4
-- ctest .
+- cd test && ctest .
 after_success:
     # Copying Coveralls data to a separate folder
     - mkdir -p ./coverals
@@ -45,7 +45,7 @@ after_success:
     # Preparing Coveralls data by changind data format to a readable one
     - git clone https://github.com/linux-test-project/lcov.git lcov_dir
     - GCOV_VERSION="--gcov-tool gcov-6"
-    - LCOV="$TRAVIS_BUILD_DIR/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
+    - LCOV="$TRAVIS_BUILD_DIR/test/lcov_dir/bin/lcov $GCOV_VERSION --compat-libtool"
     - $LCOV --directory ./coverals --base-directory ./ --capture --output-file ./coverals/coverage.info
     - $LCOV --remove ./coverals/coverage.info "$TRAVIS_BUILD_DIR/test/*" "*boost*" "/usr/*" -o ./coverals/coverage.info
 
