@@ -35,7 +35,6 @@ before_script:
 script:
 - cmake -DENABLE_COVERAGE:BOOL=TRUE -DBOOST_ROOT=$BOOST .
 - cmake --build . -- -j4
-- cd test
 - ctest
 after_success:
     # Copying Coveralls data to a separate folder
