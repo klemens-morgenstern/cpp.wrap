@@ -16,7 +16,8 @@ function(generate_wrapped_cpp name)
     else()
         math(EXPR tpl_loc2 ${tpl_loc}+1 )
         list(GET ARGV ${tpl_loc2} tpl)
-        set(tpl --template=${tpl})
+        get_filename_component(tpl_full ${tpl} ABSOLUTE)
+        set(tpl_arg --template=${tpl_full})
         list(REMOVE_AT ARGV ${tpl_loc} ${tpl_loc2})
     endif()
 
@@ -26,13 +27,21 @@ function(generate_wrapped_cpp name)
     else()
         math(EXPR wrapper_opt_loc2 ${wrapper_opt_loc}+1 )
         list(GET ARGV ${wrapper_opt_loc2} wrapper_opt)
-        set(wrapper_opt --wrapper-out=${wrapper_opt})
+        set(wrapper_opt_arg --wrapper-out=${wrapper_opt})
         list(REMOVE_AT ARGV ${wrapper_opt_loc} ${wrapper_opt_loc2})
     endif()
+    list(REMOVE_AT ARGV 0)
 
-    add_custom_target(wrap_${name}
-            COMMAND $<TARGET_FILE:cppwrap> --output=${name} ${ARGV} ${tpl} ${indirect} ${wrapper_opt}
-            BYPRODUCTS ${name} ${wrapper_opt}
-            DEPENDENCY cpprwap ${ARGV})
+    foreach(list_it IN LISTS ARGV)
+        set(in_dep ${in_dep} ${list_it})
+        set(target_objects $<TARGET_OBJECTS:${list_it}> ${target_objects})
+    endforeach(list_it)
+
+    add_custom_command(
+            COMMAND $<TARGET_FILE:cppwrap> --output=${name} ${target_objects} ${tpl_arg} ${is_indirect} ${wrapper_opt_arg}
+            OUTPUT ${name}
+            BYPRODUCTS ${wrapper_opt}
+            COMMENT "Running wrapper on ${ARGV}"
+            DEPENDS cppwrap ${in_dep} ${tpl})
 
 endfunction(generate_wrapped_cpp)
