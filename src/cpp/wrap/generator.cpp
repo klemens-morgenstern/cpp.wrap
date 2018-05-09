@@ -590,8 +590,6 @@ void _{Disconnect}(_{Target}_t *p, _{Target}_mem_t mem_ptr)
 
 std::string generator::make_mem (const outline::entry & e)
 {
-    std::cerr << "dem '" << e.demangled << "'" << std::endl;
-
     std::string return_type;
     std::string class_type;
     std::vector<std::string> params;
